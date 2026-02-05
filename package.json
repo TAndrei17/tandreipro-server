@@ -9,8 +9,10 @@
 	"scripts": {
 		"ci": "npm ci",
 		"build": "tsc",
+		"create:admin": "node --loader ts-node/esm scripts/createAdmin.ts",
 		"start": "npm run build && node dist/bin/app.js",
-		"dev": "node --loader ts-node/esm --no-warnings bin/app.ts",
+		"start:prod": "npm run create:admin && npm run start",
+		"dev": "npm run create:admin && node --loader ts-node/esm --no-warnings bin/app.ts",
 		"test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' npx jest",
 		"test-coverage": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' npx jest --coverage",
 		"lint": "eslint .",
@@ -19,7 +21,9 @@
 		"migrate:down": "node-pg-migrate down --dir migrations --ts"
 	},
 	"dependencies": {
+		"@types/pg": "^8.16.0",
 		"axios": "^1.13.4",
+		"bcrypt": "^6.0.0",
 		"cors": "^2.8.6",
 		"dotenv": "^17.2.3",
 		"express": "^5.2.1",
@@ -30,6 +34,7 @@
 		"@eslint/js": "^9.39.2",
 		"@stylistic/eslint-plugin": "^5.7.1",
 		"@types/axios": "^0.9.36",
+		"@types/bcrypt": "^6.0.0",
 		"@types/cors": "^2.8.19",
 		"@types/dotenv": "^6.1.1",
 		"@types/express": "^5.0.6",
