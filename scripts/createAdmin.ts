@@ -7,7 +7,7 @@ import pool from '../src/db/pool.js';
 // Runs before the server starts
 
 // command for PROD "npm run start:prod"
-// comman for DEV "npm run dev"
+// command for DEV "npm run dev"
 
 const createAdmin = async () => {
 	const username = process.env.ADMIN_NAME;
