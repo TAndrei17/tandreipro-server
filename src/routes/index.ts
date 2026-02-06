@@ -1,10 +1,11 @@
 import { Router } from 'express';
 
+import login from './login.js';
+
 const router = Router();
 
-// временный пустой маршрут-заглушка
-router.get('/', (req, res) => {
-	res.send('API placeholder route');
-});
+router.use('/auth', login);
+// router.use('/auth', check);
+// router.use('/auth', logout);
 
 export default router;
