@@ -18,6 +18,6 @@
 			"@/*": ["src/*"]
 		}
 	},
-	"include": ["src/**/*", "bin/**/*", "scripts/**/*"],
+	"include": ["src/**/*", "bin/**/*", "scripts/**/*", "__tests__/**/*", "src/types/**/*"],
 	"exclude": ["node_modules", "dist"]
 }
