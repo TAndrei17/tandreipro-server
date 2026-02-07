@@ -39,7 +39,7 @@ login.post(routes.login, async (req: Request, res: Response) => {
 
 		// 3. Generate JWT
 		const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET!, {
-			expiresIn: '120m',
+			expiresIn: '60m',
 		});
 
 		// 4. Send token via httpOnly cookie
@@ -47,7 +47,7 @@ login.post(routes.login, async (req: Request, res: Response) => {
 			httpOnly: true, // cannot be read from client-side JavaScript
 			secure: process.env.NODE_ENV === 'production',
 			sameSite: 'strict', // protection from CSRF
-			maxAge: 120 * 60 * 1000, // 120 minutes
+			maxAge: 60 * 60 * 1000, // 60 minutes
 		});
 
 		return res.status(200).json({ success: true, role: user.role });
