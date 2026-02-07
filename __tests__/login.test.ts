@@ -1,7 +1,7 @@
 import express from 'express';
 import request from 'supertest';
 
-import login from '../src/routes/login';
+import login from '../src/routes/login.js';
 
 const app = express();
 app.use(express.json());
