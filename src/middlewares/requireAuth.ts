@@ -17,7 +17,7 @@ export function requireAuth(requiredRole: 'admin' | 'user' = 'admin') {
 			const token = req.cookies?.auth_token;
 
 			if (!token) {
-				return res.status(401).json({ error: 'Unauthorized' });
+				return res.status(401).json({ error: 'You are not authorized. Please log in.' });
 			}
 
 			// Verify the token (under the hood)
@@ -25,7 +25,9 @@ export function requireAuth(requiredRole: 'admin' | 'user' = 'admin') {
 
 			// Check the role - admin
 			if (requiredRole && decoded.role !== requiredRole) {
-				return res.status(403).json({ error: 'Forbidden' });
+				return res
+					.status(403)
+					.json({ error: 'You do not have permission to access this resource.' });
 			}
 
 			// Pass the user data forward

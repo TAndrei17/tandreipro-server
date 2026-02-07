@@ -13,7 +13,9 @@ login.post(routes.login, async (req: Request, res: Response) => {
 		const { email, password } = req.body;
 
 		if (!email || !password) {
-			return res.status(400).json({ error: 'Invalid credentials' });
+			return res
+				.status(400)
+				.json({ error: 'Unable to log in. Please verify your email and password.' });
 		}
 
 		// 1. Get admin by email
@@ -26,7 +28,9 @@ login.post(routes.login, async (req: Request, res: Response) => {
 		);
 
 		if (result.rowCount === 0) {
-			return res.status(401).json({ error: 'Invalid credentials' });
+			return res
+				.status(401)
+				.json({ error: 'Unable to log in. Please verify your email and password.' });
 		}
 
 		const user = result.rows[0];
@@ -34,7 +38,9 @@ login.post(routes.login, async (req: Request, res: Response) => {
 		// 2. Compare password
 		const isPasswordMatch = await bcrypt.compare(password, user.password_hash);
 		if (!isPasswordMatch) {
-			return res.status(401).json({ error: 'Invalid credentials' });
+			return res
+				.status(401)
+				.json({ error: 'Unable to log in. Please verify your email and password.' });
 		}
 
 		// 3. Generate JWT
@@ -53,7 +59,9 @@ login.post(routes.login, async (req: Request, res: Response) => {
 		return res.status(200).json({ success: true, role: user.role });
 	} catch (error) {
 		console.error(error);
-		return res.status(500).json({ error: 'Auth failed' });
+		return res
+			.status(500)
+			.json({ error: 'Unable to log in. Please verify your email and password.' });
 	}
 });
 
