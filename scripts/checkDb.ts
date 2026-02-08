@@ -16,9 +16,9 @@ import pool from '../src/db/pool.js';
     `);
 
 		if ((table.rowCount ?? 0) > 0) {
-			console.log('Table "questions" exists ✅');
+			console.log('Table "questions" exists');
 		} else {
-			console.log('Table "questions" does NOT exist ❌');
+			console.log('Table "questions" does NOT exist');
 		}
 	} catch (err: unknown) {
 		if (err instanceof Error) {
