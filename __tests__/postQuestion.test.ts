@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(postQuestion);
 
 afterAll(async () => {
-	await pool.query('DELETE FROM questions WHERE name = $1', ['Mike Ross']);
+	await pool.query('DELETE FROM questions WHERE name = $1', ['Marty McFly']);
 	await pool.end();
 });
 
@@ -26,7 +26,11 @@ describe('POST /questions', () => {
 	it('returns 201 if data is complete', async () => {
 		const res = await request(app)
 			.post('/')
-			.send({ name: 'Mike Ross', email: 'suits@suits.org', question: 'Are you missing me?' });
+			.send({
+				name: 'Marty McFly',
+				email: 'backtothefuture@mail.org',
+				question: 'Are you missing me?',
+			});
 
 		expect(res.status).toBe(201);
 		expect(res.body.success).toBe(true);

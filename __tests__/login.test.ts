@@ -17,7 +17,7 @@ process.env.JWT_SECRET = 'testsecret';
 
 // Create a test user in the database before tests
 const testUser = {
-	id: '11111111-1111-1111-1111-111111111111',
+	id: 100,
 	username: 'admin',
 	email: 'admin@test.com',
 	password: 'password123',
