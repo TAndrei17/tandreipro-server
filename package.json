@@ -18,7 +18,9 @@
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
 		"migrate:up": "node-pg-migrate up --dir migrations --ts",
-		"migrate:down": "node-pg-migrate down --dir migrations --ts"
+		"migrate:down": "node-pg-migrate down --dir migrations --ts",
+		"remove:tables": "node scripts/removeTables.ts",
+		"check:db": "node scripts/checkDb.ts"
 	},
 	"dependencies": {
 		"axios": "^1.13.4",
