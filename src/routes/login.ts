@@ -2,9 +2,8 @@ import bcrypt from 'bcrypt';
 import { Router, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-import pool from '@/db/pool.js'; // check it
-
 import routes from './routes.js';
+import pool from '../db/pool.js';
 
 const login = Router();
 
