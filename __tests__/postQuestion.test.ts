@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(postQuestion);
 
 afterAll(async () => {
+	await pool.query('DELETE FROM questions WHERE name = $1', ['Mike Ross']);
 	await pool.end();
 });
 
