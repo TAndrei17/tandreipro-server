@@ -6,9 +6,8 @@ export const shorthands = {};
 export const up = (pgm: MigrationBuilder) => {
 	pgm.createTable('users', {
 		id: {
-			type: 'uuid',
+			type: 'serial',
 			primaryKey: true,
-			default: pgm.func('gen_random_uuid()'),
 		},
 		username: {
 			type: 'varchar(50)',
