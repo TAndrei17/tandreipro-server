@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 
-import { QuestionBody, QuestionResponse } from '@/types/Questions.js';
+import { QuestionRequest, QuestionResponse } from '@/types/Questions.js';
 
 import routes from './routes.js';
 import pool from '../db/pool.js';
@@ -9,7 +9,7 @@ const postQuestion = Router();
 
 postQuestion.post(
 	routes.questionsPost,
-	async (req: Request<{}, {}, QuestionBody>, res: Response<QuestionResponse>) => {
+	async (req: Request<{}, {}, QuestionRequest>, res: Response<QuestionResponse>) => {
 		try {
 			const { name, email, question } = req.body;
 
