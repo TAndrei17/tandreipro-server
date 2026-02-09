@@ -18,15 +18,15 @@ export interface QuestionResponse {
 	};
 }
 
-type Question = {
-	id: string;
+export type QuestionsPublic = {
+	id: number;
 	name: string;
-	question: string;
+	content: string;
 	created_at: string;
 };
 
 export interface QuestionsPublicResponse {
 	success: boolean;
 	message: string;
-	data?: Question[] | [];
+	data?: QuestionsPublic[];
 }
