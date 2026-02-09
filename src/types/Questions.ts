@@ -28,5 +28,5 @@ type Question = {
 export interface QuestionsPublicResponse {
 	success: boolean;
 	message: string;
-	data: Question[];
+	data?: Question[] | [];
 }
