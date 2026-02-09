@@ -24,13 +24,11 @@ describe('POST /questions', () => {
 	});
 
 	it('returns 201 if data is complete', async () => {
-		const res = await request(app)
-			.post('/')
-			.send({
-				name: 'Marty McFly',
-				email: 'backtothefuture@mail.org',
-				question: 'Are you missing me?',
-			});
+		const res = await request(app).post('/').send({
+			name: 'Marty McFly',
+			email: 'backtothefuture@mail.org',
+			question: 'Are you missing me?',
+		});
 
 		expect(res.status).toBe(201);
 		expect(res.body.success).toBe(true);
@@ -40,5 +38,28 @@ describe('POST /questions', () => {
 		// Checking directly in the database
 		const dbCheck = await pool.query('SELECT * FROM questions WHERE id=$1', [res.body.data.id]);
 		expect(dbCheck.rowCount).toBe(1);
+	});
+
+	it('returns 500 if there is a server error', async () => {
+		// Save the original method
+		const originalQuery = pool.query;
+
+		// Replace it with a function that throws an error
+		pool.query = async () => {
+			throw new Error('DB failure');
+		};
+
+		const res = await request(app).post('/').send({
+			name: 'Marty McFly',
+			email: 'backtothefuture@mail.org',
+			question: 'Are you missing me?',
+		});
+
+		expect(res.status).toBe(500);
+		expect(res.body.success).toBe(false);
+		expect(res.body.message).toBe('We’re sorry. We couldn’t receive your question.');
+
+		// Restore the original method
+		pool.query = originalQuery;
 	});
 });
