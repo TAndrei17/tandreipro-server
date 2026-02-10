@@ -1,11 +1,10 @@
 import { Router, Request, Response } from 'express';
 
-import { requireAuth } from '@/middlewares/requireAuth.js';
-import { AdminQuestionRequest } from '@/types/adminPanelTypes.js';
-import { Question } from '@/types/common/question.js';
-
 import routes from './routes.js';
 import pool from '../db/pool.js';
+import { requireAuth } from '../middlewares/requireAuth.js';
+import { AdminQuestionRequest } from '../types/adminPanelTypes.js';
+import { Question } from '../types/common/question.js';
 
 const adminPanel = Router();
 
