@@ -1,3 +1,5 @@
+import { Question } from './common/question.js';
+
 export interface PublicQuestionRequest {
 	name: string;
 	email: string;
@@ -18,15 +20,8 @@ export interface PublicQuestionResponse {
 	};
 }
 
-export type PublicQuestion = {
-	id: number;
-	name: string;
-	content: string;
-	created_at: string;
-};
-
 export interface PublicAllQuestionsResponse {
 	success: boolean;
 	message: string;
-	data?: PublicQuestion[];
+	data?: Question[];
 }
