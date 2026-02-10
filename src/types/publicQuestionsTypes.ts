@@ -1,10 +1,10 @@
-export interface QuestionRequest {
+export interface PublicQuestionRequest {
 	name: string;
 	email: string;
 	question: string;
 }
 
-export interface QuestionResponse {
+export interface PublicQuestionResponse {
 	success: boolean;
 	message: string;
 	data?: {
@@ -18,15 +18,15 @@ export interface QuestionResponse {
 	};
 }
 
-export type QuestionsPublic = {
+export type PublicQuestion = {
 	id: number;
 	name: string;
 	content: string;
 	created_at: string;
 };
 
-export interface QuestionsPublicResponse {
+export interface PublicAllQuestionsResponse {
 	success: boolean;
 	message: string;
-	data?: QuestionsPublic[];
+	data?: PublicQuestion[];
 }

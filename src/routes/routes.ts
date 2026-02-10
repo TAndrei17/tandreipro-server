@@ -2,8 +2,7 @@ const routes = {
 	login: '/login',
 	logout: '/logout',
 
-	questionsPost: '/',
-	questionsPublic: '/public',
+	public: '/',
 };
 
 export default routes;

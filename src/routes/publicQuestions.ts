@@ -1,15 +1,47 @@
 import { Router, Request, Response } from 'express';
 
-import { QuestionRequest, QuestionResponse } from '@/types/Questions.js';
+import {
+	PublicQuestion,
+	PublicAllQuestionsResponse,
+	PublicQuestionRequest,
+	PublicQuestionResponse,
+} from '@/types/publicQuestionsTypes.js';
 
 import routes from './routes.js';
 import pool from '../db/pool.js';
 
-const postQuestion = Router();
+const publicQuestions = Router();
 
-postQuestion.post(
-	routes.questionsPost,
-	async (req: Request<{}, {}, QuestionRequest>, res: Response<QuestionResponse>) => {
+publicQuestions.get(
+	routes.public,
+	async (req: Request, res: Response<PublicAllQuestionsResponse>) => {
+		try {
+			const result = await pool.query(
+				`SELECT id, name, content, created_at
+			 FROM questions
+			 WHERE approved = $1
+			 `,
+				[true],
+			);
+
+			const data: PublicQuestion[] = result.rows.map((row) => ({
+				id: row.id,
+				name: row.name,
+				content: row.content,
+				created_at: row.created_at.toISOString(),
+			}));
+
+			return res.status(200).json({ success: true, message: 'Data loaded successfully.', data });
+		} catch (error) {
+			console.error(error);
+			return res.status(500).json({ success: false, message: 'Unable to load data.' });
+		}
+	},
+);
+
+publicQuestions.post(
+	routes.public,
+	async (req: Request<{}, {}, PublicQuestionRequest>, res: Response<PublicQuestionResponse>) => {
 		try {
 			const { name, email, question } = req.body;
 
@@ -48,4 +80,4 @@ postQuestion.post(
 	},
 );
 
-export default postQuestion;
+export default publicQuestions;
