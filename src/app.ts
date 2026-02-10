@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Express } from 'express';
 
@@ -11,7 +12,9 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.json()); // for future (?)
+app.use(cookieParser());
+app.use(express.json());
+
 app.use('/', router);
 
 export default app;
