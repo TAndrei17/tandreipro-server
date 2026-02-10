@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-// import getQuestionsPublic from './getQuestionsPublic.js';
+import adminPanel from './adminPanel.js';
 import login from './login.js';
 import logout from './logout.js';
 import publicQuestions from './publicQuestions.js';
@@ -11,5 +11,7 @@ router.use('/auth', login); // '/login'
 router.use('/auth', logout); // '/logout'
 
 router.use('/public', publicQuestions); // '/'
+
+router.use('/admin', adminPanel); // '/'
 
 export default router;

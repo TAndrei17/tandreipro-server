@@ -3,6 +3,8 @@ const routes = {
 	logout: '/logout',
 
 	public: '/',
+
+	admin: '/',
 };
 
 export default routes;
