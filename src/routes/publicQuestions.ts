@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 
+import { Question } from '@/types/common/question.js';
 import {
-	PublicQuestion,
 	PublicAllQuestionsResponse,
 	PublicQuestionRequest,
 	PublicQuestionResponse,
@@ -24,7 +24,7 @@ publicQuestions.get(
 				[true],
 			);
 
-			const data: PublicQuestion[] = result.rows.map((row) => ({
+			const data: Question[] = result.rows.map((row) => ({
 				id: row.id,
 				name: row.name,
 				content: row.content,
