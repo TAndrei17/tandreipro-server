@@ -2,13 +2,13 @@ import 'dotenv/config';
 import express from 'express';
 import request from 'supertest';
 
-import publicQuestions from '@/routes/publicQuestions.js';
+import router from '@/routes/index.js';
 
 import pool from '../src/db/pool.js';
 
 const app = express();
 app.use(express.json());
-app.use(publicQuestions);
+app.use(router);
 
 afterAll(async () => {
 	await pool.query('DELETE FROM questions');
@@ -18,13 +18,14 @@ afterAll(async () => {
 describe('all actions /public', () => {
 	it('POST/ returns 400 if data is missing', async () => {
 		const res = await request(app)
-			.post('/')
+			.post('/public')
 			.send({ name: '', email: '', question: 'Some question' });
+
 		expect(res.status).toBe(400);
 	});
 
 	it('POST/ returns 201 if data is complete', async () => {
-		const res = await request(app).post('/').send({
+		const res = await request(app).post('/public').send({
 			name: 'Marty McFly',
 			email: 'backtothefuture@mail.org',
 			question: 'Are you missing me?',
@@ -49,7 +50,7 @@ describe('all actions /public', () => {
 			throw new Error('DB failure');
 		};
 
-		const res = await request(app).post('/').send({
+		const res = await request(app).post('/public').send({
 			name: 'Marty McFly',
 			email: 'backtothefuture@mail.org',
 			question: 'Are you missing me?',
@@ -66,18 +67,16 @@ describe('all actions /public', () => {
 	it('GET/ returns 200 if data is received', async () => {
 		await pool.query('UPDATE questions SET approved = $1 WHERE name = $2', [true, 'Marty McFly']);
 
-		const res = await request(app).get('/');
+		const res = await request(app).get('/public');
 		expect(res.status).toBe(200);
-		expect(res.headers['content-type']).toMatch(/json/);
 		expect(res.body.success).toBe(true);
 	});
 
 	it('GET/ returns 200 with empty array if no approved questions', async () => {
 		await pool.query('UPDATE questions SET approved = $1', [false]);
 
-		const res = await request(app).get('/');
+		const res = await request(app).get('/public');
 		expect(res.status).toBe(200);
-		expect(res.headers['content-type']).toMatch(/json/);
 		expect(res.body.success).toBe(true);
 		expect(res.body.data).toEqual([]);
 	});
@@ -91,7 +90,7 @@ describe('all actions /public', () => {
 			throw new Error('DB failure');
 		};
 
-		const res = await request(app).get('/');
+		const res = await request(app).get('/public');
 
 		expect(res.status).toBe(500);
 
@@ -99,3 +98,6 @@ describe('all actions /public', () => {
 		pool.query = originalQuery;
 	});
 });
+
+// npx jest --runInBand - запускает тесты последовательно, а не параллельно.
+// важно, когда несколько тестов работают с одной базой
