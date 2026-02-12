@@ -5,6 +5,7 @@ const routes = {
 	public: '/',
 
 	admin: '/',
+	adminQuestions: '/questions',
 };
 
 export default routes;
