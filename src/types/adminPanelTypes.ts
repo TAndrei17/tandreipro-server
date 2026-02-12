@@ -5,7 +5,7 @@ export interface AdminQuestionRequest {
 	limit?: string;
 }
 
-export interface PublicQuestionResponse {
+export interface AdminQuestionResponse {
 	success: boolean;
 	message: string;
 	data?: Question[];
@@ -13,4 +13,13 @@ export interface PublicQuestionResponse {
 	limit?: number;
 	total?: number;
 	totalPages?: number;
+}
+
+export interface AdminQuestionDeleteRequest {
+	id?: string;
+}
+
+export interface AdminQuestionDeleteResponse {
+	success: boolean;
+	message: string;
 }
