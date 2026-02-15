@@ -14,7 +14,7 @@
 		"start:prod": "npm run create:admin && npm run start",
 		"dev": "npm run create:admin && node --loader ts-node/esm --no-warnings bin/app.ts",
 		"test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' npx jest --runInBand",
-		"test-coverage": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' npx jest --coverage",
+		"test-coverage": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' npx jest --coverage --runInBand",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
 		"migrate:up": "node-pg-migrate up --dir migrations --ts",
