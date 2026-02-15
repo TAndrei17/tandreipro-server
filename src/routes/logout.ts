@@ -1,10 +1,12 @@
 import { Router, Request, Response } from 'express';
 
+import { requireAuth } from '@/middlewares/requireAuth.js';
+
 import routes from './routes.js';
 
 const logout = Router();
 
-logout.post(routes.logout, async (req: Request, res: Response) => {
+logout.post(routes.logout, requireAuth(), async (req: Request, res: Response) => {
 	try {
 		res.clearCookie('auth_token', {
 			httpOnly: true,
