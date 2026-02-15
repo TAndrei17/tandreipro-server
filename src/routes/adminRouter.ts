@@ -7,24 +7,24 @@ import getAllQuestions from '@/services/admin/getAllQuestions.js';
 import routes from './routes.js';
 import { requireAuth } from '../middlewares/requireAuth.js';
 
-const adminPanel = Router();
+const adminRouter = Router();
 
-adminPanel.get(
+adminRouter.get(
 	routes.admin, // '/admin/'
 	requireAuth(),
 	getAllQuestions,
 );
 
-adminPanel.delete(
+adminRouter.delete(
 	routes.adminQuestions, // '/admin/questions'
 	requireAuth(),
 	deleteAllQuestions,
 );
 
-adminPanel.delete(
+adminRouter.delete(
 	routes.adminQuestionOne, // '/admin/questions/:id'
 	requireAuth(),
 	deleteQuestion,
 );
 
-export default adminPanel;
+export default adminRouter;
