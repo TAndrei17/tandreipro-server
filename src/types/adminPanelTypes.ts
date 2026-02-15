@@ -23,3 +23,15 @@ export interface AdminQuestionDeleteResponse {
 	success: boolean;
 	message: string;
 }
+
+export interface AdminQuestionUpdateRequest {
+	name?: string;
+	email?: string;
+	content?: string;
+	approved?: boolean;
+}
+
+export interface AdminQuestionUpdateResponse {
+	success: boolean;
+	message: string;
+}
