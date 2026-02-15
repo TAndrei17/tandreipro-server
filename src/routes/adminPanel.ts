@@ -14,7 +14,7 @@ import { Question } from '../types/common/question.js';
 const adminPanel = Router();
 
 adminPanel.get(
-	routes.admin,
+	routes.admin, // '/admin/'
 	requireAuth(),
 	async (req: Request<{}, {}, {}, AdminQuestionRequest>, res: Response<AdminQuestionResponse>) => {
 		try {
@@ -108,7 +108,7 @@ adminPanel.delete(
 			if (result.rowCount === 0) {
 				return res.status(404).json({
 					success: false,
-					message: 'Question not found',
+					message: 'Question not found.',
 				});
 			}
 
