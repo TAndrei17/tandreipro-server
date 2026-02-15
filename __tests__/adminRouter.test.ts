@@ -29,7 +29,7 @@ const generateToken = (role: 'admin' | 'user' = 'admin') => {
 describe('All actions /admin', () => {
 	// GET ALL QUESTIONS
 	it('GET/ returns 401 without token', async () => {
-		const res = await request(app).get('/admin');
+		const res = await request(app).get('/admin/questions');
 
 		expect(res.status).toBe(401);
 		expect(res.body.error).toBe('You are not authorized. Please log in.');
@@ -39,7 +39,7 @@ describe('All actions /admin', () => {
 		const token = generateToken('admin');
 
 		const res = await request(app)
-			.get('/admin')
+			.get('/admin/questions')
 			.set('Cookie', [`auth_token=${token}`]);
 
 		expect(res.status).toBe(200);
@@ -61,7 +61,7 @@ describe('All actions /admin', () => {
 		const token = generateToken('admin');
 
 		const res = await request(app)
-			.get('/admin')
+			.get('/admin/questions')
 			.set('Cookie', [`auth_token=${token}`]);
 
 		expect(res.status).toBe(200);
@@ -84,7 +84,7 @@ describe('All actions /admin', () => {
 		};
 
 		const res = await request(app)
-			.get('/admin')
+			.get('/admin/questions')
 			.set('Cookie', [`auth_token=${token}`]);
 
 		expect(res.status).toBe(500);
