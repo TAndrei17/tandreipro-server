@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
 
-import { AdminQuestionRequest, AdminQuestionResponse } from '@/types/adminPanelTypes.js';
-import { Question } from '@/types/common/question.js';
-
 import pool from '../../db/pool.js';
+import { AdminQuestionRequest, AdminQuestionResponse } from '../../types/adminPanelTypes.js';
+import { Question } from '../../types/common/question.js';
 
 const getAllQuestions = async (
 	req: Request<{}, {}, {}, AdminQuestionRequest>,

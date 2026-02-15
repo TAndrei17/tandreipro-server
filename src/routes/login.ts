@@ -1,8 +1,7 @@
 import { Router } from 'express';
 
-import loginAdmin from '@/services/auth/loginAdmin.js';
-
 import routes from './routes.js';
+import loginAdmin from '../services/auth/loginAdmin.js';
 
 const login = Router();
 
