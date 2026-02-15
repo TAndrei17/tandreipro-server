@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import deleteAllQuestions from '@/services/admin/deleteAllQestions.js';
+import deleteAllQuestions from '@/services/admin/deleteAllQuestions.js';
 import deleteQuestion from '@/services/admin/deleteQuestion.js';
 import getAllQuestions from '@/services/admin/getAllQuestions.js';
 
