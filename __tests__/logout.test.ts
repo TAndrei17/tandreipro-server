@@ -4,7 +4,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import request from 'supertest';
 
-import logout from '../src/routes/logout.js';
+import logout from '../src/routes/auth/logout.js';
 
 const app = express();
 app.use(cookieParser());

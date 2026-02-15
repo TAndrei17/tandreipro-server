@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
-import adminRouter from './adminRouter.js';
-import login from './login.js';
-import logout from './logout.js';
-import publicRouter from './publicRouter.js';
+import adminRouter from './admin/adminRouter.js';
+import login from './auth/login.js';
+import logout from './auth/logout.js';
+import publicRouter from './public/publicRouter.js';
 
 const router = Router();
 

@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import request from 'supertest';
 
 import pool from '../src/db/pool.js';
-import login from '../src/routes/login.js';
+import login from '../src/routes/auth/login.js';
 
 // Test Express app
 const app = express();

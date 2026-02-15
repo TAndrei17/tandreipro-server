@@ -1,10 +1,10 @@
 import { Router } from 'express';
 
-import routes from './routes.js';
-import { requireAuth } from '../middlewares/requireAuth.js';
-import deleteAllQuestions from '../services/admin/deleteAllQuestions.js';
-import deleteQuestion from '../services/admin/deleteQuestion.js';
-import getAllQuestions from '../services/admin/getAllQuestions.js';
+import { requireAuth } from '../../middlewares/requireAuth.js';
+import deleteAllQuestions from '../../services/admin/deleteAllQuestions.js';
+import deleteQuestion from '../../services/admin/deleteQuestion.js';
+import getAllQuestions from '../../services/admin/getAllQuestions.js';
+import routes from '../routes.js';
 
 const adminRouter = Router();
 

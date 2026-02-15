@@ -1,6 +1,6 @@
 const routes = {
-	login: '/login',
-	logout: '/logout',
+	authLogin: '/login',
+	authLogout: '/logout',
 
 	public: '/',
 

@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
-import routes from './routes.js';
-import createQuestion from '../services/public/createQuestion.js';
-import getApprovedQuestions from '../services/public/getApprovedQuestions.js';
+import createQuestion from '../../services/public/createQuestion.js';
+import getApprovedQuestions from '../../services/public/getApprovedQuestions.js';
+import routes from '../routes.js';
 
 const publicRouter = Router();
 
