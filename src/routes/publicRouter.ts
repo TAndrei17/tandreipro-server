@@ -7,8 +7,14 @@ import routes from './routes.js';
 
 const publicRouter = Router();
 
-publicRouter.get(routes.public, getApprovedQuestions); // '/public'
+publicRouter.get(
+	routes.public, // '/public'
+	getApprovedQuestions,
+);
 
-publicRouter.post(routes.public, createQuestion); // '/public'
+publicRouter.post(
+	routes.public, // '/public'
+	createQuestion,
+);
 
 export default publicRouter;

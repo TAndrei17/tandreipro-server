@@ -6,6 +6,9 @@ import routes from './routes.js';
 
 const login = Router();
 
-login.post(routes.login, loginAdmin); // '/auth/login'
+login.post(
+	routes.login, // '/auth/login'
+	loginAdmin,
+);
 
 export default login;

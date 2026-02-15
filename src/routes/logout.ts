@@ -7,6 +7,10 @@ import routes from './routes.js';
 
 const logout = Router();
 
-logout.post(routes.logout, requireAuth(), logoutAdmin); // '/auth/logout'
+logout.post(
+	routes.logout, // '/auth/logout'
+	requireAuth(),
+	logoutAdmin,
+);
 
 export default logout;
