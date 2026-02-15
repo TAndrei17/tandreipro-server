@@ -13,6 +13,10 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(router);
 
+beforeAll(async () => {
+	await pool.query('DELETE FROM questions');
+});
+
 afterAll(async () => {
 	await pool.query('DELETE FROM questions');
 	await pool.end();
@@ -22,7 +26,8 @@ const generateToken = (role: 'admin' | 'user' = 'admin') => {
 	return jwt.sign({ userId: 1, role }, process.env.JWT_SECRET!, { expiresIn: '1h' });
 };
 
-describe('all actions /admin', () => {
+describe('All actions /admin', () => {
+	// GET ALL QUESTIONS
 	it('GET/ returns 401 without token', async () => {
 		const res = await request(app).get('/admin');
 
@@ -80,6 +85,134 @@ describe('all actions /admin', () => {
 
 		const res = await request(app)
 			.get('/admin')
+			.set('Cookie', [`auth_token=${token}`]);
+
+		expect(res.status).toBe(500);
+
+		// Restore the original method
+		pool.query = originalQuery;
+	});
+
+	// DELETE ONE QUESTION
+	it('Delete/ returns 401 without token', async () => {
+		const res = await request(app).delete('/admin/questions/1');
+
+		expect(res.status).toBe(401);
+		expect(res.body.error).toBe('You are not authorized. Please log in.');
+	});
+
+	it('DELETE/ returns 400 if data is not found', async () => {
+		const postRes = await request(app).post('/public').send({
+			name: 'John Connor',
+			email: 'sarahson@mail.com',
+			question: 'I protected the world',
+		});
+
+		expect(postRes.body.success).toBe(true);
+
+		const token = generateToken('admin');
+		const nonExistentId = postRes.body.data.id + 9999;
+
+		const res = await request(app)
+			.delete(`/admin/questions/${nonExistentId}`)
+			.set('Cookie', [`auth_token=${token}`]);
+
+		expect(res.status).toBe(404);
+		expect(res.body.success).toBe(false);
+		expect(res.body.message).toBe('Question not found.');
+	});
+
+	it('DELETE/ returns 200 if data is deleted', async () => {
+		const postRes = await request(app).post('/public').send({
+			name: 'Billy Willy',
+			email: 'microsoft@outlook.com',
+			question: 'I created Windows twice',
+		});
+
+		expect(postRes.body.success).toBe(true);
+
+		const token = generateToken('admin');
+
+		const res = await request(app)
+			.delete(`/admin/questions/${postRes.body.data.id}`)
+			.set('Cookie', [`auth_token=${token}`]);
+
+		expect(res.status).toBe(200);
+		expect(res.body.success).toBe(true);
+		expect(res.body.message).toBe('Question deleted successfully.');
+	});
+
+	it('Delete/ returns 500 if there is a server error', async () => {
+		const token = generateToken('admin');
+		// Save the original method
+		const originalQuery = pool.query;
+
+		// Replace it with a function that throws an error
+		pool.query = async () => {
+			throw new Error('DB failure');
+		};
+
+		const res = await request(app)
+			.delete('/admin/questions/1')
+			.set('Cookie', [`auth_token=${token}`]);
+
+		expect(res.status).toBe(500);
+
+		// Restore the original method
+		pool.query = originalQuery;
+	});
+
+	// DELETE ALL QUESTIONS
+	it('DELETE/ returns 401 without token', async () => {
+		const res = await request(app).delete('/admin/questions');
+
+		expect(res.status).toBe(401);
+		expect(res.body.error).toBe('You are not authorized. Please log in.');
+	});
+
+	it('DELETE/ returns 200 if data is deleted', async () => {
+		const postResOne = await request(app).post('/public').send({
+			name: 'Bill Gates',
+			email: 'microsoft@outlook.com',
+			question: 'I created Windows',
+		});
+
+		const postResTwo = await request(app).post('/public').send({
+			name: 'Billy',
+			email: 'microsoft@outlook.com',
+			question: 'I created Windows again',
+		});
+
+		expect(postResOne.body.success).toBe(true);
+		expect(postResTwo.body.success).toBe(true);
+
+		const token = generateToken('admin');
+
+		const res = await request(app)
+			.delete('/admin/questions')
+			.set('Cookie', [`auth_token=${token}`]);
+
+		expect(res.status).toBe(200);
+		expect(res.body.success).toBe(true);
+		expect(res.body.message).toBe('All questions deleted successfully.');
+
+		// Checking directly in the database
+		const dbCheck = await pool.query('SELECT * FROM questions', []);
+		expect(dbCheck.rowCount).toBe(0);
+	});
+
+	it('Delete/ returns 500 if there is a server error', async () => {
+		const token = generateToken('admin');
+		// Save the original method
+		const originalQuery = pool.query;
+
+		// Replace it with a function that throws an error
+		pool.query = async () => {
+			throw new Error('DB failure');
+		};
+
+		const res = await request(app)
+			.delete('/admin/questions')
 			.set('Cookie', [`auth_token=${token}`]);
 
 		expect(res.status).toBe(500);
