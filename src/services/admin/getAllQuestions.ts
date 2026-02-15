@@ -16,7 +16,7 @@ const getAllQuestions = async (
 
 		// --- Fetch questions with stable order ---
 		const result = await pool.query(
-			`SELECT id, name, content, created_at
+			`SELECT id, name, email, content, approved, created_at
 				 FROM questions
 				 ORDER BY created_at DESC, id DESC
 				 LIMIT $1 OFFSET $2`,
@@ -26,7 +26,9 @@ const getAllQuestions = async (
 		const data: Question[] = result.rows.map((row) => ({
 			id: row.id,
 			name: row.name,
+			email: row.email,
 			content: row.content,
+			approved: row.approved,
 			created_at: row.created_at.toISOString(),
 		}));
 

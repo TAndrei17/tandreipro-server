@@ -17,7 +17,9 @@ const getApprovedQuestions = async (req: Request, res: Response<PublicAllQuestio
 		const data: Question[] = result.rows.map((row) => ({
 			id: row.id,
 			name: row.name,
+			email: row.email,
 			content: row.content,
+			approved: row.approved,
 			created_at: row.created_at.toISOString(),
 		}));
 

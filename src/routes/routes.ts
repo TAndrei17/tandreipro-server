@@ -4,7 +4,6 @@ const routes = {
 
 	public: '/',
 
-	admin: '/',
 	adminQuestions: '/questions',
 	adminQuestionOne: '/questions/:id',
 };
