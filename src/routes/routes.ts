@@ -6,6 +6,7 @@ const routes = {
 
 	admin: '/',
 	adminQuestions: '/questions',
+	adminQuestionOne: '/questions/:id',
 };
 
 export default routes;
