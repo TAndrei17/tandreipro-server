@@ -1,10 +1,7 @@
 import { Request, Response } from 'express';
 
 import pool from '../../db/pool.js';
-import {
-	AdminQuestionUpdateRequest,
-	AdminQuestionUpdateResponse,
-} from '../../types/adminPanelTypes.js';
+import { AdminQuestionUpdateRequest, AdminQuestionUpdateResponse } from '../../types/adminTypes.js';
 
 const updateQuestion = async (
 	req: Request<{ id: string }, {}, AdminQuestionUpdateRequest>,

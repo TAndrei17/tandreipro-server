@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import pool from '../../db/pool.js';
-import { AdminQuestionDeleteResponse } from '../../types/adminPanelTypes.js';
+import { AdminQuestionDeleteResponse } from '../../types/adminTypes.js';
 
 const deleteAllQuestions = async (req: Request, res: Response<AdminQuestionDeleteResponse>) => {
 	try {

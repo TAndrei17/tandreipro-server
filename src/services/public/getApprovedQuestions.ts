@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import pool from '../../db/pool.js';
 import { Question } from '../../types/common/question.js';
-import { PublicAllQuestionsResponse } from '../../types/publicQuestionsTypes.js';
+import { PublicAllQuestionsResponse } from '../../types/publicTypes.js';
 
 const getApprovedQuestions = async (req: Request, res: Response<PublicAllQuestionsResponse>) => {
 	try {

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import pool from '../../db/pool.js';
-import { AdminQuestionRequest, AdminQuestionResponse } from '../../types/adminPanelTypes.js';
+import { AdminQuestionRequest, AdminQuestionResponse } from '../../types/adminTypes.js';
 import { Question } from '../../types/common/question.js';
 
 const getAllQuestions = async (

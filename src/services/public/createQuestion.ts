@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import pool from '../../db/pool.js';
-import { PublicQuestionRequest, PublicQuestionResponse } from '../../types/publicQuestionsTypes.js';
+import { PublicQuestionRequest, PublicQuestionResponse } from '../../types/publicTypes.js';
 
 const createQuestion = async (
 	req: Request<{}, {}, PublicQuestionRequest>,
