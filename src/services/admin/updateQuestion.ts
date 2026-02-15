@@ -14,7 +14,7 @@ const updateQuestion = async (
 		if (!Number.isInteger(id)) {
 			return res.status(400).json({
 				success: false,
-				message: 'Invalid id',
+				message: 'Invalid id.',
 			});
 		}
 
@@ -49,7 +49,7 @@ const updateQuestion = async (
 		if (fields.length === 0) {
 			return res.status(400).json({
 				success: false,
-				message: 'No fields to update',
+				message: 'No fields to update.',
 			});
 		}
 
@@ -69,20 +69,19 @@ const updateQuestion = async (
 		if (result.rowCount === 0) {
 			return res.status(404).json({
 				success: false,
-				message: 'Question not found',
+				message: 'Question not found.',
 			});
 		}
 
 		return res.status(200).json({
 			success: true,
-			message: 'Data updated successfully',
+			message: 'Data updated successfully.',
 		});
 	} catch (error) {
 		console.error(error);
-
 		return res.status(500).json({
 			success: false,
-			message: 'Server error',
+			message: 'Server error.',
 		});
 	}
 };
