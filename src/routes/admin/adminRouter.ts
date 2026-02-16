@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import createTag from '@/services/admin/createTag.js';
+import deleteTag from '@/services/admin/deleteTag.js';
 
 import { requireAuth } from '../../middlewares/requireAuth.js';
 import deleteAllQuestions from '../../services/admin/deleteAllQuestions.js';
@@ -39,6 +40,12 @@ adminRouter.post(
 	routes.adminTags, // '/admin/tags'
 	requireAuth(),
 	createTag,
+);
+
+adminRouter.delete(
+	routes.adminTag, // '/admin/tags/:id'
+	requireAuth(),
+	deleteTag,
 );
 
 export default adminRouter;

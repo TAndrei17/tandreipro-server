@@ -11,7 +11,7 @@ const deleteTag = async (req: Request<{ id: string }>, res: Response<AdmintagDel
 		if (!Number.isInteger(id)) {
 			return res.status(400).json({
 				success: false,
-				message: 'Invalid id',
+				message: 'Invalid id.',
 			});
 		}
 
