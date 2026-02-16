@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 
-import { Tag } from '@/types/common/tag.js';
 import { PublicAllTagsResponse } from '@/types/publicTypes.js';
 
 import pool from '../../db/pool.js';
+import { Tag } from '../../types/common/tag.js';
 
 const getTags = async (req: Request, res: Response<PublicAllTagsResponse>) => {
 	try {

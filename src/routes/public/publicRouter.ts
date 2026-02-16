@@ -1,9 +1,8 @@
 import { Router } from 'express';
 
-import getTags from '@/services/public/getTags.js';
-
 import createQuestion from '../../services/public/createQuestion.js';
 import getApprovedQuestions from '../../services/public/getApprovedQuestions.js';
+import getTags from '../../services/public/getTags.js';
 import routes from '../routes.js';
 
 const publicRouter = Router();

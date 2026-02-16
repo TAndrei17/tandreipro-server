@@ -39,7 +39,7 @@ export interface AdminQuestionUpdateResponse {
 }
 
 export interface AdminCreateTagRequest {
-	tag: string;
+	name: string;
 }
 
 export interface AdminCreateTagResponse {
@@ -49,7 +49,7 @@ export interface AdminCreateTagResponse {
 }
 
 export interface AdminTagDeleteRequest {
-	id: number;
+	id: string;
 }
 
 export interface AdmintagDeleteResponse {

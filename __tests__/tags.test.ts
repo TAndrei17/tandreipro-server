@@ -29,7 +29,7 @@ const generateToken = (role: 'admin' | 'user' = 'admin') => {
 describe('All actions /tags', () => {
 	// CREATE TAGS
 	it('POST/ returns 401 without token', async () => {
-		const res = await request(app).post('/admin/tags').send({ tag: 'Test' });
+		const res = await request(app).post('/admin/tags').send({ name: 'Test' });
 		expect(res.status).toBe(401);
 		expect(res.body.error).toBe('You are not authorized. Please log in.');
 	});
@@ -40,7 +40,7 @@ describe('All actions /tags', () => {
 			.post('/admin/tags')
 			.set('Cookie', [`auth_token=${token}`])
 			.send({
-				tag: '',
+				name: '',
 			});
 
 		expect(postRes.body.success).toBe(false);
@@ -53,7 +53,7 @@ describe('All actions /tags', () => {
 			.post('/admin/tags')
 			.set('Cookie', [`auth_token=${token}`])
 			.send({
-				tag: 'Websites',
+				name: 'Websites',
 			});
 
 		expect(postRes.body.success).toBe(true);
@@ -66,14 +66,14 @@ describe('All actions /tags', () => {
 			.post('/admin/tags')
 			.set('Cookie', [`auth_token=${token}`])
 			.send({
-				tag: 'AppMobile',
+				name: 'AppMobile',
 			});
 
 		const postRes = await request(app)
 			.post('/admin/tags')
 			.set('Cookie', [`auth_token=${token}`])
 			.send({
-				tag: 'AppMobile',
+				name: 'AppMobile',
 			});
 
 		expect(postRes.body.success).toBe(false);
@@ -93,7 +93,7 @@ describe('All actions /tags', () => {
 		const res = await request(app)
 			.post('/admin/tags')
 			.set('Cookie', [`auth_token=${token}`])
-			.send({ tag: 'Test2' });
+			.send({ name: 'Test2' });
 
 		expect(res.status).toBe(500);
 
@@ -152,7 +152,7 @@ describe('All actions /tags', () => {
 			.post('/admin/tags')
 			.set('Cookie', [`auth_token=${token}`])
 			.send({
-				tag: 'AppMobile-Test',
+				name: 'AppMobile-Test',
 			});
 
 		const notexistId = res.body.data.id + 100;
@@ -172,7 +172,7 @@ describe('All actions /tags', () => {
 			.post('/admin/tags')
 			.set('Cookie', [`auth_token=${token}`])
 			.send({
-				tag: 'AppMobile-Test-2',
+				name: 'AppMobile-Test-2',
 			});
 
 		const id = res.body.data.id;

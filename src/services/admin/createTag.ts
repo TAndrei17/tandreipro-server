@@ -1,17 +1,16 @@
 import { Request, Response } from 'express';
 
-import { AdminCreateTagRequest, AdminCreateTagResponse } from '@/types/adminTypes.js';
-
 import pool from '../../db/pool.js';
+import { AdminCreateTagRequest, AdminCreateTagResponse } from '../../types/adminTypes.js';
 
 const createTag = async (
 	req: Request<{}, {}, AdminCreateTagRequest>,
 	res: Response<AdminCreateTagResponse>,
 ) => {
 	try {
-		const { tag } = req.body;
+		const { name } = req.body;
 
-		if (!tag || typeof tag !== 'string' || tag.trim() === '') {
+		if (!name || typeof name !== 'string' || name.trim() === '') {
 			return res.status(400).json({
 				success: false,
 				message: 'Tag name is required and must be a non-empty string.',
@@ -20,7 +19,7 @@ const createTag = async (
 
 		const result = await pool.query(
 			'INSERT INTO tags (name) VALUES ($1) ON CONFLICT (name) DO NOTHING RETURNING id, name',
-			[tag.trim()],
+			[name.trim()],
 		);
 
 		if (result.rowCount === 0) {
