@@ -49,7 +49,7 @@ describe('All actions /admin', () => {
 	});
 
 	it('GET/ returns 200 if data is received', async () => {
-		const postRes = await request(app).post('/public').send({
+		const postRes = await request(app).post('/public/questions').send({
 			name: 'Bill Gates',
 			email: 'microsoft@outlook.com',
 			question: 'I created Windows',
@@ -102,7 +102,7 @@ describe('All actions /admin', () => {
 	});
 
 	it('PATCH/ returns 400 if id is incorrect', async () => {
-		const postRes = await request(app).post('/public').send({
+		const postRes = await request(app).post('/public/questions').send({
 			name: 'Juan Carlos II',
 			email: 'rey@gmail.com',
 			question: '¡Soy el Rey del Mundo!',
@@ -123,7 +123,7 @@ describe('All actions /admin', () => {
 	});
 
 	it('PATCH/ returns 400 without update data', async () => {
-		const postRes = await request(app).post('/public').send({
+		const postRes = await request(app).post('/public/questions').send({
 			name: 'Mike Ross',
 			email: 'layer@gmail.com',
 			question: 'I am loyal',
@@ -145,7 +145,7 @@ describe('All actions /admin', () => {
 	});
 
 	it('PATCH/ returns 200 if data is updated', async () => {
-		const postRes = await request(app).post('/public').send({
+		const postRes = await request(app).post('/public/questions').send({
 			name: 'Alexander Second',
 			email: 'king@mail.com',
 			question: 'I am the King!',
@@ -175,7 +175,7 @@ describe('All actions /admin', () => {
 	});
 
 	it('PATCH/ returns 500 if there is a server error', async () => {
-		const postRes = await request(app).post('/public').send({
+		const postRes = await request(app).post('/public/questions').send({
 			name: 'Alexander',
 			email: 'kinggreate@mail.com',
 			question: 'I am the King of Greece!',
@@ -214,7 +214,7 @@ describe('All actions /admin', () => {
 	});
 
 	it('DELETE/ returns 400 if data is not found', async () => {
-		const postRes = await request(app).post('/public').send({
+		const postRes = await request(app).post('/public/questions').send({
 			name: 'John Connor',
 			email: 'sarahson@mail.com',
 			question: 'I protected the world',
@@ -235,7 +235,7 @@ describe('All actions /admin', () => {
 	});
 
 	it('DELETE/ returns 200 if data is deleted', async () => {
-		const postRes = await request(app).post('/public').send({
+		const postRes = await request(app).post('/public/questions').send({
 			name: 'Billy Willy',
 			email: 'microsoft@outlook.com',
 			question: 'I created Windows twice',
@@ -283,13 +283,13 @@ describe('All actions /admin', () => {
 	});
 
 	it('DELETE/ returns 200 if data is deleted', async () => {
-		const postResOne = await request(app).post('/public').send({
+		const postResOne = await request(app).post('/public/questions').send({
 			name: 'Bill Gates',
 			email: 'microsoft@outlook.com',
 			question: 'I created Windows',
 		});
 
-		const postResTwo = await request(app).post('/public').send({
+		const postResTwo = await request(app).post('/public/questions').send({
 			name: 'Billy',
 			email: 'microsoft@outlook.com',
 			question: 'I created Windows again',

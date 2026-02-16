@@ -15,17 +15,17 @@ afterAll(async () => {
 	await pool.end();
 });
 
-describe('all actions /public', () => {
+describe('all actions /public/questions', () => {
 	it('POST/ returns 400 if data is missing', async () => {
 		const res = await request(app)
-			.post('/public')
+			.post('/public/questions')
 			.send({ name: '', email: '', question: 'Some question' });
 
 		expect(res.status).toBe(400);
 	});
 
 	it('POST/ returns 201 if data is complete', async () => {
-		const res = await request(app).post('/public').send({
+		const res = await request(app).post('/public/questions').send({
 			name: 'Marty McFly',
 			email: 'backtothefuture@mail.org',
 			question: 'Are you missing me?',
@@ -50,7 +50,7 @@ describe('all actions /public', () => {
 			throw new Error('DB failure');
 		};
 
-		const res = await request(app).post('/public').send({
+		const res = await request(app).post('/public/questions').send({
 			name: 'Marty McFly',
 			email: 'backtothefuture@mail.org',
 			question: 'Are you missing me?',
@@ -67,7 +67,7 @@ describe('all actions /public', () => {
 	it('GET/ returns 200 if data is received', async () => {
 		await pool.query('UPDATE questions SET approved = $1 WHERE name = $2', [true, 'Marty McFly']);
 
-		const res = await request(app).get('/public');
+		const res = await request(app).get('/public/questions');
 		expect(res.status).toBe(200);
 		expect(res.body.success).toBe(true);
 	});
@@ -75,7 +75,7 @@ describe('all actions /public', () => {
 	it('GET/ returns 200 with empty array if no approved questions', async () => {
 		await pool.query('UPDATE questions SET approved = $1', [false]);
 
-		const res = await request(app).get('/public');
+		const res = await request(app).get('/public/questions');
 		expect(res.status).toBe(200);
 		expect(res.body.success).toBe(true);
 		expect(res.body.data).toEqual([]);
@@ -90,7 +90,7 @@ describe('all actions /public', () => {
 			throw new Error('DB failure');
 		};
 
-		const res = await request(app).get('/public');
+		const res = await request(app).get('/public/questions');
 
 		expect(res.status).toBe(500);
 
