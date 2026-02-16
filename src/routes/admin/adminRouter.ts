@@ -1,11 +1,10 @@
 import { Router } from 'express';
 
-import createTag from '@/services/admin/createTag.js';
-import deleteTag from '@/services/admin/deleteTag.js';
-
 import { requireAuth } from '../../middlewares/requireAuth.js';
+import createTag from '../../services/admin/createTag.js';
 import deleteAllQuestions from '../../services/admin/deleteAllQuestions.js';
 import deleteQuestion from '../../services/admin/deleteQuestion.js';
+import deleteTag from '../../services/admin/deleteTag.js';
 import getAllQuestions from '../../services/admin/getAllQuestions.js';
 import updateQuestion from '../../services/admin/updateQuestion.js';
 import routes from '../routes.js';
