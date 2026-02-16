@@ -37,7 +37,7 @@ const createQuestion = async (
 			data: result.rows[0],
 		});
 	} catch (error) {
-		console.log(error);
+		console.error('Error creating question:', error);
 		return res
 			.status(500)
 			.json({ success: false, message: 'We’re sorry. We couldn’t receive your question.' });
