@@ -1,4 +1,5 @@
 import { Question } from './common/question.js';
+import { Tag } from './common/tag.js';
 
 export interface PublicQuestionRequest {
 	name: string;
@@ -24,4 +25,10 @@ export interface PublicAllQuestionsResponse {
 	success: boolean;
 	message: string;
 	data?: Question[];
+}
+
+export interface PublicAllTagsResponse {
+	success: boolean;
+	message: string;
+	data?: Tag[];
 }

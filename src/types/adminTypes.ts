@@ -1,4 +1,5 @@
 import { Question } from './common/question.js';
+import { Tag } from './common/tag.js';
 
 export interface AdminQuestionRequest {
 	page?: string;
@@ -33,6 +34,25 @@ export interface AdminQuestionUpdateRequest {
 }
 
 export interface AdminQuestionUpdateResponse {
+	success: boolean;
+	message: string;
+}
+
+export interface AdminCreateTagRequest {
+	tag: string;
+}
+
+export interface AdminCreateTagResponse {
+	success: boolean;
+	message: string;
+	data?: Tag;
+}
+
+export interface AdminTagDeleteRequest {
+	id: number;
+}
+
+export interface AdmintagDeleteResponse {
 	success: boolean;
 	message: string;
 }
