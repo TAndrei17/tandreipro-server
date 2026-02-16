@@ -172,6 +172,7 @@ describe('All actions /admin', () => {
 		expect(updated.name).toBe('Alexander Nikolaevich');
 		expect(updated.content).toBe('Am I King really?');
 		expect(updated.approved).toBe(true);
+		expect(updated.admin_id).toBe(1);
 	});
 
 	it('PATCH/ returns 500 if there is a server error', async () => {

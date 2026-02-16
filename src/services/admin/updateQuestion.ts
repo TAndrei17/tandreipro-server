@@ -1,10 +1,12 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+
+import { AuthenticatedRequest } from '@/middlewares/requireAuth.js';
 
 import pool from '../../db/pool.js';
 import { AdminQuestionUpdateRequest, AdminQuestionUpdateResponse } from '../../types/adminTypes.js';
 
 const updateQuestion = async (
-	req: Request<{ id: string }, {}, AdminQuestionUpdateRequest>,
+	req: AuthenticatedRequest<{ id: string }, {}, AdminQuestionUpdateRequest>,
 	res: Response<AdminQuestionUpdateResponse>,
 ) => {
 	try {

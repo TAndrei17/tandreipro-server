@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
 interface JwtPayload {
@@ -5,41 +6,48 @@ interface JwtPayload {
 	role: string;
 }
 
-// The middleware validates the token before the request reaches the server.
-// If the token is expired or invalid, authorization fails
-// and the request will not be processed.
-
 /*
-  Server crashed at startup with Express 5 + TypeScript + ESM because strict
-  Request typing combined with jwt.verify caused a runtime exception during
-  route registration.  
 
-  Using `any` for req, res, next bypasses the type checks, allowing the
-  middleware to run safely at request time without breaking the server.
+In the middleware, I’m effectively extending the `Req` object with new data. 
+TypeScript doesn’t recognize this data, so the server build fails. 
+I had to create a new generic `AuthenticatedRequest` that extends `Req`. 
+This way, in subsequent components, I can use `AuthenticatedRequest` 
+and safely access the data added by the middleware.
+
 */
 
+export interface AuthenticatedRequest<
+	P = Record<string, any>,
+	ResBody = any,
+	ReqBody = any,
+	ReqQuery = Record<string, any>,
+	LocalsObj extends Record<string, any> = Record<string, any>,
+> extends Request<P, ResBody, ReqBody, ReqQuery, LocalsObj> {
+	user?: {
+		id: number;
+		role: string;
+	};
+}
+
 export function requireAuth(requiredRole: 'admin' | 'user' = 'admin') {
-	return (req: any, res: any, next: any) => {
+	return (req: Request, res: Response, next: NextFunction) => {
 		try {
-			// Extract the token from the request
-			const token = req.cookies?.auth_token;
+			const token = (req as any).cookies?.auth_token;
 
 			if (!token) {
 				return res.status(401).json({ error: 'You are not authorized. Please log in.' });
 			}
 
-			// Verify the token (under the hood)
 			const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
 
-			// Check the role - admin
 			if (requiredRole && decoded.role !== requiredRole) {
 				return res
 					.status(403)
 					.json({ error: 'You do not have permission to access this resource.' });
 			}
 
-			// Pass the user data forward
-			req.user = {
+			// Here we "more or less safely" assign the type
+			(req as AuthenticatedRequest).user = {
 				id: decoded.userId,
 				role: decoded.role,
 			};
