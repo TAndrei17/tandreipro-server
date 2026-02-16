@@ -20,6 +20,8 @@ const updateQuestion = async (
 			});
 		}
 
+		// It’s important that TS recognizes the `Req` (AuthenticatedRequest) type;
+		// otherwise, the server will crash.
 		const userId = req.user?.id;
 		if (!userId) {
 			return res.status(401).json({
