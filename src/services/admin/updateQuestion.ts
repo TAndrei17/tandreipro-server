@@ -9,7 +9,7 @@ const updateQuestion = async (
 ) => {
 	try {
 		const id = Number(req.params.id);
-		const { name, email, content, approved } = req.body;
+		const { name, email, content, approved, tags } = req.body;
 
 		if (!Number.isInteger(id)) {
 			return res.status(400).json({
@@ -82,6 +82,28 @@ const updateQuestion = async (
 				success: false,
 				message: 'Question not found.',
 			});
+		}
+
+		// Link the question with tags
+		if (tags && Array.isArray(tags)) {
+			// 1. Remove old associations
+			await pool.query('DELETE FROM question_tags WHERE question_id = $1', [id]);
+
+			if (tags.length > 0) {
+				// 2. Build VALUES and placeholders for insertion
+				const values: number[] = [];
+				const placeholders: string[] = [];
+
+				tags.forEach((tagId, i) => {
+					values.push(tagId);
+					placeholders.push(`($1, $${i + 2})`);
+				});
+
+				await pool.query(
+					`INSERT INTO question_tags (question_id, tag_id) VALUES ${placeholders.join(', ')}`,
+					[id, ...values],
+				);
+			}
 		}
 
 		return res.status(200).json({

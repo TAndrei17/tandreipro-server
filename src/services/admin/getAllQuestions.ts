@@ -9,30 +9,51 @@ const getAllQuestions = async (
 	res: Response<AdminQuestionResponse>,
 ) => {
 	try {
-		// --- Parse query parameters ---
+		// Parse query parameters
 		const page = parseInt(req.query.page ?? '1', 10); // default page = 1
 		const limit = parseInt(req.query.limit ?? '100', 10); // default limit = 100
 		const offset = (page - 1) * limit;
 
-		// --- Fetch questions with stable order ---
+		// Fetch questions with their tag IDs
 		const result = await pool.query(
-			`SELECT id, name, email, content, approved, created_at
-				 FROM questions
-				 ORDER BY created_at DESC, id DESC
-				 LIMIT $1 OFFSET $2`,
+			`SELECT 
+				q.id AS question_id,
+				q.name,
+				q.email,
+				q.content,
+				q.approved,
+				q.created_at,
+				qt.tag_id
+			FROM questions q
+			LEFT JOIN question_tags qt ON q.id = qt.question_id
+			ORDER BY q.created_at DESC, q.id DESC
+			LIMIT $1 OFFSET $2`,
 			[limit, offset],
 		);
 
-		const data: Question[] = result.rows.map((row) => ({
-			id: row.id,
-			name: row.name,
-			email: row.email,
-			content: row.content,
-			approved: row.approved,
-			created_at: row.created_at.toISOString(),
-		}));
+		// Map questions and collect tag IDs
+		const questionsMap = new Map<number, Question>();
 
-		// --- If no questions, return empty array only ---
+		result.rows.forEach((row) => {
+			if (!questionsMap.has(row.question_id)) {
+				questionsMap.set(row.question_id, {
+					id: row.question_id,
+					name: row.name,
+					email: row.email,
+					content: row.content,
+					approved: row.approved,
+					created_at: row.created_at.toISOString(),
+					tags: [],
+				});
+			}
+			if (row.tag_id) {
+				questionsMap.get(row.question_id)?.tags?.push(row.tag_id);
+			}
+		});
+
+		const data: Question[] = Array.from(questionsMap.values());
+
+		// If no questions, return empty array only
 		if (data.length === 0) {
 			return res.status(200).json({
 				success: true,
@@ -41,7 +62,7 @@ const getAllQuestions = async (
 			});
 		}
 
-		// --- Fetch total count for pagination info ---
+		// Fetch total count for pagination info
 		const countResult = await pool.query('SELECT COUNT(*) FROM questions');
 		const total = parseInt(countResult.rows[0].count, 10);
 

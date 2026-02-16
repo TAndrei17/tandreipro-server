@@ -4,5 +4,6 @@ export type Question = {
 	email: string;
 	content: string;
 	approved: boolean;
+	tags?: number[];
 	created_at: string;
 };

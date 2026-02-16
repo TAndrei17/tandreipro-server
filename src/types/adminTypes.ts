@@ -29,6 +29,7 @@ export interface AdminQuestionUpdateRequest {
 	email?: string;
 	content?: string;
 	approved?: boolean;
+	tags?: number[];
 }
 
 export interface AdminQuestionUpdateResponse {
