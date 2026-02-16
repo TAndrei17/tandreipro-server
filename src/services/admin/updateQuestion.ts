@@ -18,10 +18,19 @@ const updateQuestion = async (
 			});
 		}
 
+		const userId = req.user?.id;
+		if (!userId) {
+			return res.status(401).json({
+				success: false,
+				message: 'Unauthorized: user data missing.',
+			});
+		}
+
 		// Collects only the fields that should be updated
 		const fields: string[] = [];
 		// Collects SQL parameter values in the correct order
 		const values: (string | boolean | number)[] = [];
+		// The index is incremented by 1 after the value is assigned
 		let index = 1;
 
 		if (name !== undefined) {
@@ -40,8 +49,7 @@ const updateQuestion = async (
 		}
 
 		if (approved !== undefined) {
-			// The index is incremented by 1 after the value is assigned
-			fields.push(`approved = $${index++}`); // $4 (index = 5)
+			fields.push(`approved = $${index++}`); // $4
 			values.push(approved);
 		}
 
@@ -55,14 +63,17 @@ const updateQuestion = async (
 
 		// Always update updated_at
 		fields.push('updated_at = NOW()');
+		// Always update admin_id
+		fields.push(`admin_id = $${index++}`); // $5
+		values.push(userId);
 
 		const query = `
 			UPDATE questions
 			SET ${fields.join(', ')}
 			WHERE id = $${index}
-		`;
+		`; // 'id = $6'
 
-		values.push(id);
+		values.push(id); // 'index id === 6'
 
 		const result = await pool.query(query, values);
 
