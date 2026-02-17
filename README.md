@@ -1,3 +1,5 @@
+[![Maintainability](https://qlty.sh/gh/TAndrei17/projects/tandreipro-server/maintainability.svg)](https://qlty.sh/gh/TAndrei17/projects/tandreipro-server) [![Code Coverage](https://qlty.sh/gh/TAndrei17/projects/tandreipro-server/coverage.svg)](https://qlty.sh/gh/TAndrei17/projects/tandreipro-server)
+
 # Backend for tandrei.pro
 
 Backend service developed for the personal website  
