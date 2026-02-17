@@ -2,7 +2,6 @@
 	"name": "backend-atrunkin",
 	"version": "1.0.0",
 	"description": "TAndrei.pro backend",
-	"license": "ISC",
 	"author": "Andrei Trunkin",
 	"type": "module",
 	"main": "app.js",
