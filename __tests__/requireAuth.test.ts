@@ -3,15 +3,21 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import request from 'supertest';
 
-import { requireAuth } from '../src/middlewares/requireAuth.js';
+import { AdminQuestionUpdateRequest } from '@/types/adminTypes.js';
+
+import { AuthenticatedRequest, requireAuth } from '../src/middlewares/requireAuth.js';
 
 const app = express();
 app.use(cookieParser()); // parse cookies for middleware
 
 // Test route protected by the middleware
-app.get('/protected', requireAuth('admin'), (req, res) => {
-	res.status(200).json({ message: 'Access granted', user: req.user });
-});
+app.get(
+	'/protected',
+	requireAuth('admin'),
+	(req: AuthenticatedRequest<{ id: string }, {}, AdminQuestionUpdateRequest>, res) => {
+		res.status(200).json({ message: 'Access granted', user: req.user });
+	},
+);
 
 describe('requireAuth middleware', () => {
 	const secret = 'test-secret';
