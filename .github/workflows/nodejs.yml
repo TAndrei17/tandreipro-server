@@ -41,7 +41,8 @@ jobs:
         run: npm run test-coverage
         env:
           NODE_ENV: ${{ env.NODE_ENV }} # Environment for tests (development/test)
-          DATABASE_URL: ${{ env.DATABASE_URL }} # Test database URL
+          DATABASE_URL: ${{ secrets.DATABASE_URL }} # Test database URL
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       # Publish coverage report to QLTY
       - name: Publish coverage to QLTY
