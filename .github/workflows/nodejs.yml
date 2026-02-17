@@ -1,0 +1,52 @@
+name: Node CI
+
+on:
+  push:
+    branches:
+      - main # Trigger on push to main
+  pull_request: # Trigger on pull requests
+
+env:
+  CI: true # Enable CI mode for Node.js
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Use latest Ubuntu runner
+
+    strategy:
+      matrix:
+        node-version: [24.13.1] # Node.js version to use
+
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v3
+
+      # Setup Node.js and cache npm dependencies
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      # Install dependencies using a clean install
+      - name: Install dependencies
+        run: npm ci
+
+      # Run linting to check code quality
+      - name: Lint
+        run: npm run lint
+
+      # Run tests and generate coverage report
+      - name: Run tests & generate coverage
+        run: npm run test-coverage
+        env:
+          NODE_ENV: ${{ secrets.NODE_ENV }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }} # Test database URL
+          API_KEY: ${{ secrets.QLTY_API_KEY }} # API key for QLTY
+
+      # Publish coverage report to QLTY
+      - name: Publish coverage to QLTY
+        uses: qltysh/qlty-action/coverage@v2
+        with:
+          token: ${{ secrets.QLTY_COVERAGE_TOKEN }} # QLTY token
+          files: coverage/lcov.info # Coverage report file
