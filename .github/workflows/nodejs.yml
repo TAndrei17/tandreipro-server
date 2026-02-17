@@ -19,11 +19,11 @@ jobs:
 
     steps:
       # Checkout the repository
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.12.0
 
       # Setup Node.js and cache npm dependencies
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v3.12.0
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
