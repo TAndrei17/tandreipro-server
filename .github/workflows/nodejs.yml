@@ -40,9 +40,8 @@ jobs:
       - name: Run tests & generate coverage
         run: npm run test-coverage
         env:
-          NODE_ENV: ${{ secrets.NODE_ENV }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }} # Test database URL
-          API_KEY: ${{ secrets.QLTY_API_KEY }} # API key for QLTY
+          NODE_ENV: ${{ env.NODE_ENV }} # Environment for tests (development/test)
+          DATABASE_URL: ${{ env.DATABASE_URL }} # Test database URL
 
       # Publish coverage report to QLTY
       - name: Publish coverage to QLTY
