@@ -11,7 +11,6 @@ const getApprovedQuestions = async (req: Request, res: Response<PublicAllQuestio
 			`SELECT 
 				q.id AS question_id,
 				q.name,
-				q.email,
 				q.content,
 				q.approved,
 				q.created_at,
@@ -31,7 +30,6 @@ const getApprovedQuestions = async (req: Request, res: Response<PublicAllQuestio
 				questionsMap.set(row.question_id, {
 					id: row.question_id,
 					name: row.name,
-					email: row.email,
 					content: row.content,
 					approved: row.approved,
 					created_at: row.created_at.toISOString(),
