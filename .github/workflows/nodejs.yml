@@ -43,6 +43,7 @@ jobs:
           NODE_ENV: ${{ env.NODE_ENV }} # Environment for tests (development/test)
           DATABASE_URL: ${{ secrets.DATABASE_URL }} # Test database URL
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          KEY_SECRET_CAPTCHA: ${{ secrets.KEY_SECRET_CAPTCHA }}
 
       # Publish coverage report to QLTY
       - name: Publish coverage to QLTY
