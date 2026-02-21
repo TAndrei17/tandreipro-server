@@ -35,7 +35,8 @@ const createQuestion = async (
 			return res.status(400).json({ success: false, message: 'CAPTCHA token is missing' });
 		}
 
-		const secret = process.env.KEY_SECRET_CAPTCHA;
+		const ENV_PROD = process.env.NODE_ENV === 'production';
+		const secret = ENV_PROD ? process.env.KEY_SECRET_CAPTCHA : process.env.KEY_SECRET_CAPTCHA_DEV;
 		if (!secret) {
 			throw new Error('CAPTCHA secret key is not set in env variables');
 		}

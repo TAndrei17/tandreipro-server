@@ -12,6 +12,7 @@ const requiredEnv = [
 	'DATABASE_URL',
 	'JWT_SECRET',
 	'KEY_SECRET_CAPTCHA',
+	'KEY_SECRET_CAPTCHA_DEV',
 ];
 requiredEnv.forEach((key) => {
 	if (!process.env[key]) {
