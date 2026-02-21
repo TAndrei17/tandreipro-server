@@ -1,12 +1,8 @@
-import axios from 'axios';
 import { Request, Response } from 'express';
 
 import pool from '../../db/pool.js';
-import {
-	PublicQuestionRequest,
-	PublicQuestionResponse,
-	RecaptchaResponse,
-} from '../../types/publicTypes.js';
+import { PublicQuestionRequest, PublicQuestionResponse } from '../../types/publicTypes.js';
+import { verifyCaptcha } from '../../utils/verifyCaptcha.js';
 
 const createQuestion = async (
 	req: Request<{}, {}, PublicQuestionRequest>,
@@ -45,20 +41,9 @@ const createQuestion = async (
 		}
 
 		// CAPTCHA checking
-		const { data } = await axios.post<RecaptchaResponse>(
-			'https://www.google.com/recaptcha/api/siteverify',
-			new URLSearchParams({
-				secret,
-				response: captchaToken,
-			}),
-			{
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-				},
-			},
-		);
+		const captchaData = await verifyCaptcha(captchaToken);
 
-		if (!data.success) {
+		if (!captchaData.success) {
 			return res.status(403).json({ success: false, message: 'CAPTCHA verification failed.' });
 		}
 
