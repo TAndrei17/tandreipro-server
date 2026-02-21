@@ -5,14 +5,7 @@ import 'dotenv/config';
 import app from '../src/app.js';
 
 // Check required environment variables
-const requiredEnv = [
-	'JWT_SECRET',
-	'ADMIN_NAME',
-	'ADMIN_EMAIL',
-	'ADMIN_PASSWORD',
-	'KEY_SECRET_CAPTCHA',
-	'DATABASE_URL',
-];
+const requiredEnv = ['ADMIN_EMAIL', 'ADMIN_NAME', 'ADMIN_PASSWORD', 'DATABASE_URL', 'JWT_SECRET'];
 requiredEnv.forEach((key) => {
 	if (!process.env[key]) {
 		throw new Error(`Environment variable ${key} is not set`);
