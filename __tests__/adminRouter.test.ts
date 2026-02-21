@@ -13,13 +13,18 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(router);
 
+let originalEnv: string | undefined;
+
 beforeAll(async () => {
+	originalEnv = process.env.NODE_ENV;
+	process.env.NODE_ENV = 'test';
 	await pool.query('DELETE FROM questions');
 });
 
 afterAll(async () => {
 	await pool.query('DELETE FROM questions');
 	await pool.end();
+	process.env.NODE_ENV = originalEnv;
 });
 
 const generateToken = (role: 'admin' | 'user' = 'admin') => {
@@ -53,6 +58,7 @@ describe('All actions /admin', () => {
 			name: 'Bill Gates',
 			email: 'microsoft@outlook.com',
 			question: 'I created Windows',
+			captchaToken: 'dummy-token',
 		});
 
 		expect(postRes.body.success).toBe(true);
@@ -106,6 +112,7 @@ describe('All actions /admin', () => {
 			name: 'Juan Carlos II',
 			email: 'rey@gmail.com',
 			question: '¡Soy el Rey del Mundo!',
+			captchaToken: 'dummy-token',
 		});
 
 		expect(postRes.body.success).toBe(true);
@@ -127,6 +134,7 @@ describe('All actions /admin', () => {
 			name: 'Mike Ross',
 			email: 'layer@gmail.com',
 			question: 'I am loyal',
+			captchaToken: 'dummy-token',
 		});
 
 		expect(postRes.body.success).toBe(true);
@@ -149,6 +157,7 @@ describe('All actions /admin', () => {
 			name: 'Alexander Second',
 			email: 'king@mail.com',
 			question: 'I am the King!',
+			captchaToken: 'dummy-token',
 		});
 
 		expect(postRes.body.success).toBe(true);
@@ -180,6 +189,7 @@ describe('All actions /admin', () => {
 			name: 'Alexander',
 			email: 'kinggreate@mail.com',
 			question: 'I am the King of Greece!',
+			captchaToken: 'dummy-token',
 		});
 
 		expect(postRes.body.success).toBe(true);
@@ -219,6 +229,7 @@ describe('All actions /admin', () => {
 			name: 'John Connor',
 			email: 'sarahson@mail.com',
 			question: 'I protected the world',
+			captchaToken: 'dummy-token',
 		});
 
 		expect(postRes.body.success).toBe(true);
@@ -240,6 +251,7 @@ describe('All actions /admin', () => {
 			name: 'Billy Willy',
 			email: 'microsoft@outlook.com',
 			question: 'I created Windows twice',
+			captchaToken: 'dummy-token',
 		});
 
 		expect(postRes.body.success).toBe(true);
@@ -288,12 +300,14 @@ describe('All actions /admin', () => {
 			name: 'Bill Gates',
 			email: 'microsoft@outlook.com',
 			question: 'I created Windows',
+			captchaToken: 'dummy-token',
 		});
 
 		const postResTwo = await request(app).post('/public/questions').send({
 			name: 'Billy',
 			email: 'microsoft@outlook.com',
 			question: 'I created Windows again',
+			captchaToken: 'dummy-token',
 		});
 
 		expect(postResOne.body.success).toBe(true);
