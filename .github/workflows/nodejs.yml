@@ -44,6 +44,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }} # Test database URL
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           KEY_SECRET_CAPTCHA: ${{ secrets.KEY_SECRET_CAPTCHA }}
+          KEY_SECRET_CAPTCHA_DEV: ${{ secrets.KEY_SECRET_CAPTCHA_DEV }}
 
       # Publish coverage report to QLTY
       - name: Publish coverage to QLTY
