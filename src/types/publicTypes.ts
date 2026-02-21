@@ -5,6 +5,7 @@ export interface PublicQuestionRequest {
 	name: string;
 	email: string;
 	question: string;
+	captchaToken: string;
 }
 
 export interface PublicQuestionResponse {
@@ -31,4 +32,12 @@ export interface PublicAllTagsResponse {
 	success: boolean;
 	message: string;
 	data?: Tag[];
+}
+
+export interface RecaptchaResponse {
+	success: boolean;
+	challenge_ts?: string;
+	hostname?: string;
+	'error-codes'?: string[];
+	score?: number; // для v3
 }

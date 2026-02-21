@@ -1,14 +1,19 @@
+import axios from 'axios';
 import { Request, Response } from 'express';
 
 import pool from '../../db/pool.js';
-import { PublicQuestionRequest, PublicQuestionResponse } from '../../types/publicTypes.js';
+import {
+	PublicQuestionRequest,
+	PublicQuestionResponse,
+	RecaptchaResponse,
+} from '../../types/publicTypes.js';
 
 const createQuestion = async (
 	req: Request<{}, {}, PublicQuestionRequest>,
 	res: Response<PublicQuestionResponse>,
 ) => {
 	try {
-		const { name, email, question } = req.body;
+		const { name, email, question, captchaToken } = req.body;
 
 		if (!name || !email || !question) {
 			return res.status(400).json({
@@ -20,6 +25,41 @@ const createQuestion = async (
 					question: !question ? 'Required' : undefined,
 				},
 			});
+		}
+
+		if (question.length < 10) {
+			return res.status(400).json({ success: false, message: 'The question is too short.' });
+		}
+
+		if (question.length > 2000) {
+			return res.status(400).json({ success: false, message: 'The question is too long.' });
+		}
+
+		if (!captchaToken) {
+			return res.status(400).json({ success: false, message: 'CAPTCHA token is missing' });
+		}
+
+		const secret = process.env.KEY_SECRET_CAPTCHA;
+		if (!secret) {
+			throw new Error('CAPTCHA secret key is not set in env variables');
+		}
+
+		// CAPTCHA checking
+		const { data } = await axios.post<RecaptchaResponse>(
+			'https://www.google.com/recaptcha/api/siteverify',
+			new URLSearchParams({
+				secret,
+				response: captchaToken,
+			}),
+			{
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+			},
+		);
+
+		if (!data.success) {
+			return res.status(403).json({ success: false, message: 'CAPTCHA verification failed.' });
 		}
 
 		const result = await pool.query(
