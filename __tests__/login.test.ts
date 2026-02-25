@@ -12,6 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(login);
 
+let originalEnv: string | undefined;
 // Mock JWT secret
 process.env.JWT_SECRET = 'testsecret';
 
@@ -26,6 +27,9 @@ const testUser = {
 };
 
 beforeAll(async () => {
+	originalEnv = process.env.NODE_ENV;
+	process.env.NODE_ENV = 'test';
+
 	testUser.password_hash = await bcrypt.hash(testUser.password, 10);
 
 	// Insert test user into the database
@@ -41,39 +45,47 @@ afterAll(async () => {
 	// Remove test user from the database
 	await pool.query('DELETE FROM users WHERE id = $1', [testUser.id]);
 	await pool.end();
+	process.env.NODE_ENV = originalEnv;
 });
 
 describe('POST /login (integration)', () => {
 	it('returns 400 if email or password is missing', async () => {
 		const res = await request(app).post('/login').send({});
 		expect(res.status).toBe(400);
-		expect(res.body.error).toBe('Unable to log in. Please verify your email and password.');
+		expect(res.body.success).toBeFalsy;
+		expect(res.body.message).toBe('Unable to log in. Please verify your email and password.');
 	});
 
 	it('returns 401 if user does not exist', async () => {
 		const res = await request(app)
 			.post('/login')
-			.send({ email: 'nonexistent@test.com', password: 'password123' });
+			.send({
+				email: 'nonexistent@test.com',
+				password: 'password123',
+				captchaToken: 'dummy-token',
+			});
 		expect(res.status).toBe(401);
-		expect(res.body.error).toBe('Unable to log in. Please verify your email and password.');
+		expect(res.body.success).toBeFalsy;
+		expect(res.body.message).toBe('Unable to log in. Please verify your email and password.');
 	});
 
 	it('returns 401 if password is incorrect', async () => {
 		const res = await request(app)
 			.post('/login')
-			.send({ email: testUser.email, password: 'wrongpassword' });
+			.send({ email: testUser.email, password: 'wrongpassword', captchaToken: 'dummy-token' });
 		expect(res.status).toBe(401);
-		expect(res.body.error).toBe('Unable to log in. Please verify your email and password.');
+		expect(res.body.success).toBeFalsy;
+		expect(res.body.message).toBe('Unable to log in. Please verify your email and password.');
 	});
 
 	it('returns 200 and sets auth_token cookie if login is successful', async () => {
 		const res = await request(app)
 			.post('/login')
-			.send({ email: testUser.email, password: testUser.password });
+			.send({ email: testUser.email, password: testUser.password, captchaToken: 'dummy-token' });
 
 		expect(res.status).toBe(200);
 		expect(res.body.success).toBe(true);
-		expect(res.body.role).toBe(testUser.role);
+		expect(res.body.data.role).toBe(testUser.role);
 
 		// Verify that cookie is set
 		const cookies = res.headers['set-cookie'];
@@ -101,7 +113,7 @@ describe('POST /login (integration)', () => {
 
 		const res = await request(app)
 			.post('/login')
-			.send({ email: testUser.email, password: testUser.password });
+			.send({ email: testUser.email, password: testUser.password, captchaToken: 'dummy-token' });
 
 		expect(res.status).toBe(500);
 
