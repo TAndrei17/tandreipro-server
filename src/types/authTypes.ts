@@ -13,3 +13,8 @@ export interface LoginResponse {
 		role: 'user' | 'admin';
 	};
 }
+
+export interface LogoutResponse {
+	success: boolean;
+	message: string;
+}

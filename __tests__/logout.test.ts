@@ -30,7 +30,8 @@ describe('POST /logout', () => {
 			.set('Cookie', [`auth_token=${token}`]);
 
 		expect(res.status).toBe(200);
-		expect(res.body).toEqual({ success: true });
+		expect(res.body.success).toBeTruthy;
+		expect(res.body.message).toBe('The session has ended.');
 
 		// check that the cookie is cleared
 		const setCookieHeader = res.headers['set-cookie'];

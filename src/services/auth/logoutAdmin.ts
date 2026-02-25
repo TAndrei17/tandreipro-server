@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 
-const logoutAdmin = async (req: Request, res: Response) => {
+import { LogoutResponse } from '../../types/authTypes.js';
+
+const logoutAdmin = async (req: Request, res: Response<LogoutResponse>) => {
 	try {
 		res.clearCookie('auth_token', {
 			httpOnly: true,
@@ -8,10 +10,10 @@ const logoutAdmin = async (req: Request, res: Response) => {
 			sameSite: 'strict',
 		});
 
-		return res.status(200).json({ success: true });
+		return res.status(200).json({ success: true, message: 'The session has ended.' });
 	} catch (error) {
 		console.error(error);
-		return res.status(500).json({ error: 'Logout failed. Please try again.' });
+		return res.status(500).json({ success: false, message: 'Logout failed. Please try again.' });
 	}
 };
 
