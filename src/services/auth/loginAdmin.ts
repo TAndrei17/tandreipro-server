@@ -77,7 +77,7 @@ const loginAdmin = async (req: Request<{}, {}, LoginRequest>, res: Response<Logi
 		return res.status(200).json({
 			success: true,
 			message: 'The admin has successfully logged in.',
-			data: { id: user.id, name: user.name, role: user.role },
+			data: { id: user.id, name: user.username, role: user.role },
 		});
 	} catch (error) {
 		console.error(error);
