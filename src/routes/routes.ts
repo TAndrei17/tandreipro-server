@@ -1,6 +1,7 @@
 const routes = {
 	authLogin: '/login',
 	authLogout: '/logout',
+	authMe: '/me',
 
 	public: '/questions',
 	publicTags: '/tags',
