@@ -67,11 +67,10 @@ const loginAdmin = async (req: Request<{}, {}, LoginRequest>, res: Response<Logi
 		});
 
 		// 4. Send token via httpOnly cookie
-		const isProd = process.env.NODE_ENV === 'production';
 		res.cookie('auth_token', token, {
 			httpOnly: true,
-			sameSite: isProd ? 'none' : 'lax',
-			secure: isProd, // false для локального dev
+			sameSite: 'none', // обязательно для кросс-домена
+			secure: true, // сервер HTTPS → cookie пойдёт
 			maxAge: 60 * 60 * 1000,
 		});
 
