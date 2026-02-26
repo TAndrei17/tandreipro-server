@@ -8,6 +8,7 @@ const app: Express = express();
 
 const corsOptions = {
 	origin: process.env.NODE_ENV === 'production' ? 'https://tandrei.pro' : 'http://localhost:5173',
+	credentials: true,
 	optionsSuccessStatus: 200,
 };
 
