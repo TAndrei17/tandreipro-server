@@ -52,20 +52,18 @@ describe('POST /login (integration)', () => {
 	it('returns 400 if email or password is missing', async () => {
 		const res = await request(app).post('/login').send({});
 		expect(res.status).toBe(400);
-		expect(res.body.success).toBeFalsy;
+		expect(res.body.success).toBeFalsy();
 		expect(res.body.message).toBe('Unable to log in. Please verify your email and password.');
 	});
 
 	it('returns 401 if user does not exist', async () => {
-		const res = await request(app)
-			.post('/login')
-			.send({
-				email: 'nonexistent@test.com',
-				password: 'password123',
-				captchaToken: 'dummy-token',
-			});
+		const res = await request(app).post('/login').send({
+			email: 'nonexistent@test.com',
+			password: 'password123',
+			captchaToken: 'dummy-token',
+		});
 		expect(res.status).toBe(401);
-		expect(res.body.success).toBeFalsy;
+		expect(res.body.success).toBeFalsy();
 		expect(res.body.message).toBe('Unable to log in. Please verify your email and password.');
 	});
 
@@ -74,7 +72,7 @@ describe('POST /login (integration)', () => {
 			.post('/login')
 			.send({ email: testUser.email, password: 'wrongpassword', captchaToken: 'dummy-token' });
 		expect(res.status).toBe(401);
-		expect(res.body.success).toBeFalsy;
+		expect(res.body.success).toBeFalsy();
 		expect(res.body.message).toBe('Unable to log in. Please verify your email and password.');
 	});
 
@@ -84,7 +82,7 @@ describe('POST /login (integration)', () => {
 			.send({ email: testUser.email, password: testUser.password, captchaToken: 'dummy-token' });
 
 		expect(res.status).toBe(200);
-		expect(res.body.success).toBe(true);
+		expect(res.body.success).toBeTruthy();
 		expect(res.body.data.role).toBe(testUser.role);
 
 		// Verify that cookie is set
@@ -104,7 +102,7 @@ describe('POST /login (integration)', () => {
 		expect(decoded).toHaveProperty('role', testUser.role);
 	});
 
-	it('returns 500 if there is a server error', async () => {
+	it('POST /login returns 500 if DB fails', async () => {
 		// Mock pool.query to simulate a DB error
 		const originalQuery = pool.query;
 		pool.query = async () => {
