@@ -3,52 +3,49 @@ name: Node CI
 on:
   push:
     branches:
-      - main # Trigger on push to main
-  pull_request: # Trigger on pull requests
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
 
 env:
-  CI: true # Enable CI mode for Node.js
+  CI: true
 
 jobs:
   build:
-    runs-on: ubuntu-latest # Use latest Ubuntu runner
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [24.14.0] # Node.js version to use
+        node-version: [24.14.0]
 
     steps:
-      # Checkout the repository
       - uses: actions/checkout@v3
 
-      # Setup Node.js and cache npm dependencies
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      # Install dependencies using a clean install
       - name: Install dependencies
         run: npm ci
 
-      # Run linting to check code quality
       - name: Lint
         run: npm run lint
 
-      # Run tests and generate coverage report
-      - name: Run tests & generate coverage
+      - name: Run tests
         run: npm run test-coverage
         env:
-          NODE_ENV: ${{ env.NODE_ENV }} # Environment for tests (development/test)
-          DATABASE_URL: ${{ secrets.DATABASE_URL }} # Test database URL
+          NODE_ENV: ${{ 'development' }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL_DEV }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          KEY_SECRET_CAPTCHA: ${{ secrets.KEY_SECRET_CAPTCHA }}
-          KEY_SECRET_CAPTCHA_DEV: ${{ secrets.KEY_SECRET_CAPTCHA_DEV }}
+          KEY_SECRET_CAPTCHA: ${{ secrets.KEY_SECRET_CAPTCHA_DEV }}
 
-      # Publish coverage report to QLTY
       - name: Publish coverage to QLTY
         uses: qltysh/qlty-action/coverage@v2
         with:
-          token: ${{ secrets.QLTY_COVERAGE_TOKEN }} # QLTY token
-          files: coverage/lcov.info # Coverage report file
+          token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
+          files: coverage/lcov.info

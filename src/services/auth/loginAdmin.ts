@@ -21,8 +21,7 @@ const loginAdmin = async (req: Request<{}, {}, LoginRequest>, res: Response<Logi
 			return res.status(400).json({ success: false, message: 'CAPTCHA token is missing' });
 		}
 
-		const ENV_PROD = process.env.NODE_ENV === 'production';
-		const secret = ENV_PROD ? process.env.KEY_SECRET_CAPTCHA : process.env.KEY_SECRET_CAPTCHA_DEV;
+		const secret = process.env.KEY_SECRET_CAPTCHA;
 		if (!secret) {
 			throw new Error('CAPTCHA secret key is not set in env variables');
 		}
