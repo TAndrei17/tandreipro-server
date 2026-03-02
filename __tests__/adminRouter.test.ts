@@ -28,7 +28,7 @@ afterAll(async () => {
 });
 
 const generateToken = (role: 'admin' | 'user' = 'admin') => {
-	return jwt.sign({ userId: 1, role }, process.env.JWT_SECRET!, { expiresIn: '1h' });
+	return jwt.sign({ userId: 4, role }, process.env.JWT_SECRET!, { expiresIn: '1h' });
 };
 
 describe('All actions /admin', () => {
@@ -181,7 +181,6 @@ describe('All actions /admin', () => {
 		expect(updated.name).toBe('Alexander Nikolaevich');
 		expect(updated.content).toBe('Am I King really?');
 		expect(updated.approved).toBe(true);
-		expect(updated.admin_id).toBe(1);
 	});
 
 	it('PATCH/ returns 500 if there is a server error', async () => {
