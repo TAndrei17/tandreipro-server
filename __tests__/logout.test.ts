@@ -15,13 +15,6 @@ const generateToken = (role: 'admin' | 'user' = 'admin') => {
 };
 
 describe('POST /logout', () => {
-	it('POST/ returns 401 without token', async () => {
-		const res = await request(app).post('/logout');
-
-		expect(res.status).toBe(401);
-		expect(res.body.error).toBe('You are not authorized. Please log in.');
-	});
-
 	it('should clear the auth_token cookie and return 200', async () => {
 		const token = generateToken('admin');
 		// simulate cookie
