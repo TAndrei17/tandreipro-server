@@ -6,8 +6,8 @@ const logoutAdmin = async (req: Request, res: Response<LogoutResponse>) => {
 	try {
 		res.clearCookie('auth_token', {
 			httpOnly: true,
-			secure: process.env.NODE_ENV === 'production',
-			sameSite: 'strict',
+			sameSite: 'none',
+			secure: true,
 		});
 
 		return res.status(200).json({ success: true, message: 'The session has ended.' });
