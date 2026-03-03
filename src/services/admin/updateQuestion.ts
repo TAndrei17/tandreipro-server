@@ -20,8 +20,6 @@ const updateQuestion = async (
 			});
 		}
 
-		// It’s important that TS recognizes the `Req` (AuthenticatedRequest) type;
-		// otherwise, the server will crash.
 		const userId = req.user?.id;
 		if (!userId) {
 			return res.status(401).json({
@@ -30,92 +28,98 @@ const updateQuestion = async (
 			});
 		}
 
-		// Collects only the fields that should be updated
 		const fields: string[] = [];
-		// Collects SQL parameter values in the correct order
 		const values: (string | boolean | number)[] = [];
-		// The index is incremented by 1 after the value is assigned
 		let index = 1;
 
 		if (name !== undefined) {
-			fields.push(`name = $${index++}`); // $1
+			fields.push(`name = $${index++}`);
 			values.push(name);
 		}
 
 		if (email !== undefined) {
-			fields.push(`email = $${index++}`); // $2
+			fields.push(`email = $${index++}`);
 			values.push(email);
 		}
 
 		if (content !== undefined) {
-			fields.push(`content = $${index++}`); // $3
+			fields.push(`content = $${index++}`);
 			values.push(content);
 		}
 
 		if (approved !== undefined) {
-			fields.push(`approved = $${index++}`); // $4
+			fields.push(`approved = $${index++}`);
 			values.push(approved);
 		}
 
-		// If there is nothing to update
-		if (fields.length === 0) {
+		const hasQuestionFields = fields.length > 0;
+		const hasTags = Array.isArray(tags);
+
+		if (!hasQuestionFields && !hasTags) {
 			return res.status(400).json({
 				success: false,
 				message: 'No fields to update.',
 			});
 		}
 
-		// Always update updated_at
-		fields.push('updated_at = NOW()');
-		// Always update admin_id
-		fields.push(`admin_id = $${index++}`); // $5
-		values.push(userId);
+		await pool.query('BEGIN');
 
-		const query = `
-			UPDATE questions
-			SET ${fields.join(', ')}
-			WHERE id = $${index}
-		`; // 'id = $6'
+		// Update question table only if needed
+		if (hasQuestionFields) {
+			fields.push('updated_at = NOW()');
+			fields.push(`admin_id = $${index++}`);
+			values.push(userId);
 
-		values.push(id); // 'index id === 6'
+			const query = `
+				UPDATE questions
+				SET ${fields.join(', ')}
+				WHERE id = $${index}
+			`;
 
-		const result = await pool.query(query, values);
+			values.push(id);
 
-		if (result.rowCount === 0) {
-			return res.status(404).json({
-				success: false,
-				message: 'Question not found.',
-			});
+			const result = await pool.query(query, values);
+
+			if (result.rowCount === 0) {
+				await pool.query('ROLLBACK');
+				return res.status(404).json({
+					success: false,
+					message: 'Question not found.',
+				});
+			}
 		}
 
-		// Link the question with tags
-		if (tags && Array.isArray(tags)) {
-			// 1. Remove old associations
+		// Update tags if provided
+		if (hasTags) {
 			await pool.query('DELETE FROM question_tags WHERE question_id = $1', [id]);
 
 			if (tags.length > 0) {
-				// 2. Build VALUES and placeholders for insertion
-				const values: number[] = [];
+				const tagValues: number[] = [];
 				const placeholders: string[] = [];
 
 				tags.forEach((tagId, i) => {
-					values.push(tagId);
+					tagValues.push(tagId);
 					placeholders.push(`($1, $${i + 2})`);
 				});
 
 				await pool.query(
-					`INSERT INTO question_tags (question_id, tag_id) VALUES ${placeholders.join(', ')}`,
-					[id, ...values],
+					`INSERT INTO question_tags (question_id, tag_id)
+					 VALUES ${placeholders.join(', ')}`,
+					[id, ...tagValues],
 				);
 			}
 		}
+
+		await pool.query('COMMIT');
 
 		return res.status(200).json({
 			success: true,
 			message: 'Data updated successfully.',
 		});
 	} catch (error) {
+		await pool.query('ROLLBACK');
 		console.error(error);
+
 		return res.status(500).json({
 			success: false,
 			message: 'Server error.',
