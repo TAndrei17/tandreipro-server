@@ -1,5 +1,9 @@
 import { Router } from 'express';
 
+import createAnswer from '@/services/admin/createAnswer.js';
+import deleteAnswer from '@/services/admin/deleteAnswer.js';
+import getAllAnswers from '@/services/admin/getAllAnswers.js';
+
 import { requireAuth } from '../../middlewares/requireAuth.js';
 import createTag from '../../services/admin/createTag.js';
 import deleteAllQuestions from '../../services/admin/deleteAllQuestions.js';
@@ -45,6 +49,24 @@ adminRouter.delete(
 	routes.adminTag, // '/admin/tags/:id'
 	requireAuth(),
 	deleteTag,
+);
+
+adminRouter.post(
+	routes.adminAnswers, // '/admin/answers'
+	requireAuth(),
+	createAnswer,
+);
+
+adminRouter.delete(
+	routes.adminAnswerOne, // '/admin/answers/:id'
+	requireAuth(),
+	deleteAnswer,
+);
+
+adminRouter.get(
+	routes.adminAnswers, // '/admin/answers'
+	requireAuth(),
+	getAllAnswers,
 );
 
 export default adminRouter;

@@ -10,6 +10,9 @@ const routes = {
 	adminQuestionOne: '/questions/:id',
 	adminTags: '/tags',
 	adminTag: '/tags/:id',
+
+	adminAnswers: '/answers',
+	adminAnswerOne: 'answers/:id',
 };
 
 export default routes;

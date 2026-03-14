@@ -1,3 +1,4 @@
+import { Answer } from './common/answer.js';
 import { Question } from './common/question.js';
 import { Tag } from './common/tag.js';
 
@@ -55,4 +56,29 @@ export interface AdminTagDeleteRequest {
 export interface AdmintagDeleteResponse {
 	success: boolean;
 	message: string;
+}
+
+export interface AdminAnswerRequest {
+	question_id: number;
+	content: string;
+}
+
+export interface AdminAnswerResponse {
+	success: boolean;
+	message: string;
+	data?: {
+		id: number;
+		created_at: string;
+	};
+}
+
+export interface AdminAnswerDeleteResponse {
+	success: boolean;
+	message: string;
+}
+
+export interface AdminAnswersResponse {
+	success: boolean;
+	message: string;
+	data?: Answer[];
 }
