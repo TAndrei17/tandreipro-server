@@ -1,5 +1,7 @@
 import { Router } from 'express';
 
+import getAnswersForApprovedQuestions from '@/services/public/getAnswersForApprovedQuestions.js';
+
 import createQuestion from '../../services/public/createQuestion.js';
 import getApprovedQuestions from '../../services/public/getApprovedQuestions.js';
 import getTags from '../../services/public/getTags.js';
@@ -20,6 +22,11 @@ publicRouter.post(
 publicRouter.get(
 	routes.publicTags, // '/public/tags'
 	getTags,
+);
+
+publicRouter.get(
+	routes.publicAnswers, // '/public/answers'
+	getAnswersForApprovedQuestions,
 );
 
 export default publicRouter;

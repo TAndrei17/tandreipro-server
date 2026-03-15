@@ -5,6 +5,7 @@ const routes = {
 
 	public: '/questions',
 	publicTags: '/tags',
+	publicAnswers: '/answers',
 
 	adminQuestions: '/questions',
 	adminQuestionOne: '/questions/:id',
