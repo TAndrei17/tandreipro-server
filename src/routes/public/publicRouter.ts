@@ -1,8 +1,7 @@
 import { Router } from 'express';
 
-import getAnswersForApprovedQuestions from '@/services/public/getAnswersForApprovedQuestions.js';
-
 import createQuestion from '../../services/public/createQuestion.js';
+import getAnswersForApprovedQuestions from '../../services/public/getAnswersForApprovedQuestions.js';
 import getApprovedQuestions from '../../services/public/getApprovedQuestions.js';
 import getTags from '../../services/public/getTags.js';
 import routes from '../routes.js';

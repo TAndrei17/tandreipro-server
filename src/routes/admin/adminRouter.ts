@@ -1,14 +1,13 @@
 import { Router } from 'express';
 
-import createAnswer from '@/services/admin/createAnswer.js';
-import deleteAnswer from '@/services/admin/deleteAnswer.js';
-import getAllAnswers from '@/services/admin/getAllAnswers.js';
-
 import { requireAuth } from '../../middlewares/requireAuth.js';
+import createAnswer from '../../services/admin/createAnswer.js';
 import createTag from '../../services/admin/createTag.js';
 import deleteAllQuestions from '../../services/admin/deleteAllQuestions.js';
+import deleteAnswer from '../../services/admin/deleteAnswer.js';
 import deleteQuestion from '../../services/admin/deleteQuestion.js';
 import deleteTag from '../../services/admin/deleteTag.js';
+import getAllAnswers from '../../services/admin/getAllAnswers.js';
 import getAllQuestions from '../../services/admin/getAllQuestions.js';
 import updateQuestion from '../../services/admin/updateQuestion.js';
 import routes from '../routes.js';
