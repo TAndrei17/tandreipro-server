@@ -15,15 +15,7 @@ const createAnswer = async (
 		if (!question_id || !content) {
 			return res.status(400).json({
 				success: false,
-				message: 'Missing required fields: question_id or content',
-			});
-		}
-
-		const userId = req.user?.id;
-		if (!userId) {
-			return res.status(401).json({
-				success: false,
-				message: 'Unauthorized: user data missing.',
+				message: 'Missing required fields: question_id or content.',
 			});
 		}
 
@@ -35,6 +27,7 @@ const createAnswer = async (
 			});
 		}
 
+		const userId = req.user?.id;
 		const result = await pool.query(
 			'INSERT INTO answers (question_id, admin_id, content) VALUES ($1, $2, $3) RETURNING id, created_at',
 			[question_id, userId, content],
@@ -49,8 +42,7 @@ const createAnswer = async (
 			message: 'Your answer has been successfully submitted.',
 			data: result.rows[0],
 		});
-	} catch (error) {
-		console.error('Error creating answer:', error);
+	} catch {
 		return res
 			.status(500)
 			.json({ success: false, message: 'We’re sorry. We couldn’t receive your answer.' });

@@ -35,8 +35,7 @@ const getAnswersForApprovedQuestions = async (
 				created_at: row.created_at.toISOString(),
 			})),
 		});
-	} catch (error) {
-		console.error(error);
+	} catch {
 		return res.status(500).json({ success: false, message: 'Unable to load data.' });
 	}
 };

@@ -12,7 +12,7 @@ const routes = {
 	adminTag: '/tags/:id',
 
 	adminAnswers: '/answers',
-	adminAnswerOne: 'answers/:id',
+	adminAnswerOne: '/answers/:id',
 };
 
 export default routes;

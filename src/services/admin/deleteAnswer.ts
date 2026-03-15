@@ -31,9 +31,7 @@ const deleteAnswer = async (
 			success: true,
 			message: 'Answer deleted successfully.',
 		});
-	} catch (error) {
-		console.error(error);
-
+	} catch {
 		return res.status(500).json({
 			success: false,
 			message: 'Server error',

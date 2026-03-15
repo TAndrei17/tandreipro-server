@@ -53,8 +53,7 @@ export function requireAuth(requiredRole: 'admin' | 'user' = 'admin') {
 			};
 
 			next();
-		} catch (err) {
-			console.log(err);
+		} catch {
 			return res.status(401).json({ error: 'Your session has expired. Please log in again.' });
 		}
 	};
