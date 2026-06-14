@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 
 import pool from '../../db/pool.js';
-import { AdmintagDeleteResponse } from '../../types/adminTypes.js';
+import { AdminTagDeleteResponse } from '../../types/adminTypes.js';
 
-const deleteTag = async (req: Request<{ id: string }>, res: Response<AdmintagDeleteResponse>) => {
+const deleteTag = async (req: Request<{ id: string }>, res: Response<AdminTagDeleteResponse>) => {
 	try {
 		const id = Number(req.params.id);
 

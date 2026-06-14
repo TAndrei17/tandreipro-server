@@ -53,7 +53,7 @@ export interface AdminTagDeleteRequest {
 	id: string;
 }
 
-export interface AdmintagDeleteResponse {
+export interface AdminTagDeleteResponse {
 	success: boolean;
 	message: string;
 }

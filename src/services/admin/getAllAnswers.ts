@@ -18,7 +18,12 @@ const getAllAnswers = async (req: Request, res: Response<AdminAnswersResponse>) 
 		return res.status(200).json({
 			success: true,
 			message: 'Data loaded successfully.',
-			data: result.rows,
+			data: result.rows.map((row) => ({
+				id: row.id,
+				question_id: row.question_id,
+				content: row.content,
+				created_at: row.created_at.toISOString(),
+			})),
 		});
 	} catch (error) {
 		console.error(error);
