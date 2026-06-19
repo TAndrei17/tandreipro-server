@@ -32,6 +32,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
 	await pool.query('DELETE FROM answers');
+	await pool.query('DELETE FROM users WHERE id = $1', [4]);
 	await pool.end();
 	process.env.NODE_ENV = originalEnv;
 });
