@@ -11,6 +11,7 @@ export const up = (pgm: MigrationBuilder) => {
 		question_id: {
 			type: 'integer',
 			notNull: true,
+			unique: true,
 			references: 'questions',
 			onDelete: 'CASCADE',
 		},

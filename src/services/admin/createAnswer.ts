@@ -29,7 +29,11 @@ const createAnswer = async (
 
 		const userId = req.user?.id;
 		const result = await pool.query(
-			'INSERT INTO answers (question_id, admin_id, content) VALUES ($1, $2, $3) RETURNING id, created_at',
+			`INSERT INTO answers (question_id, admin_id, content, created_at, updated_at)
+			 VALUES ($1, $2, $3, now(), now())
+			 ON CONFLICT (question_id)
+			 DO UPDATE SET admin_id = EXCLUDED.admin_id, content = EXCLUDED.content, updated_at = now()
+			 RETURNING id, created_at, updated_at`,
 			[question_id, userId, content],
 		);
 
