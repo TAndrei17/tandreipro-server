@@ -11,6 +11,7 @@ import pool from '../src/db/pool.js';
 		await pool.query('DROP TABLE IF EXISTS tags CASCADE');
 		await pool.query('DROP TABLE IF EXISTS users CASCADE');
 		await pool.query('DROP TABLE IF EXISTS pgmigrations CASCADE');
+		await pool.query('DROP TABLE IF EXISTS answers CASCADE');
 		console.log('All tables dropped');
 	} catch (err) {
 		console.error(err);
