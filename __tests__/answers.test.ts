@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import jwt from 'jsonwebtoken';
@@ -19,6 +20,14 @@ beforeAll(async () => {
 	originalEnv = process.env.NODE_ENV;
 	process.env.NODE_ENV = 'test';
 	await pool.query('DELETE FROM answers');
+
+	// Ensure a test admin user exists with id=4 so tokens in tests are valid
+	await pool.query(
+		`INSERT INTO users (id, username, email, password_hash, role, created_at)
+		 VALUES ($1, $2, $3, $4, $5, now())
+		 ON CONFLICT (id) DO NOTHING`,
+		[4, 'testadmin', 'testadmin@example.com', 'hash', 'admin'],
+	);
 });
 
 afterAll(async () => {
@@ -106,6 +115,54 @@ describe('CREATE ANSWER TESTS /admin', () => {
 		expect(resAnswer.status).toBe(201);
 		expect(resAnswer.body.success).toBe(true);
 		expect(resAnswer.body.message).toBe('Your answer has been successfully submitted.');
+	});
+
+	it('POST/ upserts and replaces existing answer for the same question', async () => {
+		const resQuestion = await request(app).post('/public/questions').send({
+			name: 'Marty McFly',
+			email: 'backtothefuture@mail.org',
+			question: 'Are you missing me?',
+			captchaToken: 'dummy-token',
+		});
+
+		expect(resQuestion.status).toBe(201);
+
+		const token = generateToken('admin');
+		const resAnswer1 = await request(app)
+			.post('/admin/answers')
+			.send({
+				question_id: resQuestion.body.data.id,
+				content: 'First answer content',
+			})
+			.set('Cookie', [`auth_token=${token}`]);
+
+		expect(resAnswer1.status).toBe(201);
+		expect(resAnswer1.body.success).toBe(true);
+		expect(resAnswer1.body.data).toHaveProperty('id');
+
+		// Post again for same question with different content -> should upsert (same id)
+		const resAnswer2 = await request(app)
+			.post('/admin/answers')
+			.send({
+				question_id: resQuestion.body.data.id,
+				content: 'Updated answer content',
+			})
+			.set('Cookie', [`auth_token=${token}`]);
+
+		expect(resAnswer2.status).toBe(201);
+		expect(resAnswer2.body.success).toBe(true);
+		expect(resAnswer2.body.data).toHaveProperty('id');
+		expect(resAnswer2.body.data.id).toBe(resAnswer1.body.data.id);
+
+		// Verify the stored answer content is the updated one
+		const resGet = await request(app)
+			.get('/admin/answers')
+			.set('Cookie', [`auth_token=${token}`]);
+
+		expect(resGet.status).toBe(200);
+		const answer = resGet.body.data.find((a: any) => a.id === resAnswer1.body.data.id);
+		expect(answer).toBeDefined();
+		expect(answer.content).toBe('Updated answer content');
 	});
 
 	it('POST/ returns 500 if there is a server error', async () => {
@@ -401,12 +458,18 @@ describe('GET PUBLIC ANSWERS /public', () => {
 		const res = await request(app).get('/public/answers');
 		expect(res.status).toBe(200);
 		expect(res.body.success).toBe(true);
-		expect(res.body.data.length).toBeGreaterThanOrEqual(3);
+		// With upsert, multiple posts for same question replace the same answer — at least one answer should exist
+		expect(res.body.data.length).toBeGreaterThanOrEqual(1);
 
 		const createdAts = res.body.data.map((a: any) => new Date(a.created_at).getTime());
 		for (let i = 1; i < createdAts.length; i++) {
 			expect(createdAts[i]).toBeGreaterThanOrEqual(createdAts[i - 1]);
 		}
+
+		// Ensure the last submitted content is present (upsert replaces previous answers)
+		const lastContent = contents[contents.length - 1];
+		const hasLast = res.body.data.some((a: any) => a.content === lastContent);
+		expect(hasLast).toBe(true);
 	});
 
 	it('GET/ returns 500 if there is a server error', async () => {

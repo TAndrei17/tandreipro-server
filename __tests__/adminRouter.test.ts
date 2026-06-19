@@ -19,6 +19,14 @@ beforeAll(async () => {
 	originalEnv = process.env.NODE_ENV;
 	process.env.NODE_ENV = 'test';
 	await pool.query('DELETE FROM questions');
+
+	// Ensure a test admin user exists with id=4 so tokens in tests are valid
+	await pool.query(
+		`INSERT INTO users (id, username, email, password_hash, role, created_at)
+		 VALUES ($1, $2, $3, $4, $5, now())
+		 ON CONFLICT (id) DO NOTHING`,
+		[4, 'testadmin', 'testadmin@example.com', 'hash', 'admin'],
+	);
 });
 
 afterAll(async () => {
