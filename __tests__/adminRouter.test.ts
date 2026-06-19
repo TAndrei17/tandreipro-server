@@ -1,12 +1,12 @@
 import 'dotenv/config';
+import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import request from 'supertest';
 
-import router from '@/routes/index.js';
-
 import pool from '../src/db/pool.js';
+import router from '../src/routes/index.js';
 
 const app = express();
 app.use(cookieParser());
