@@ -6,8 +6,12 @@ import router from './routes/index.js';
 
 const app: Express = express();
 
+const allowedProdOrigins = ['https://tandrei.pro', 'https://www.tandrei.pro'];
+
+const allowedDevOrigins = ['https://dev.tandreipro-page.pages.dev', 'http://localhost:5173'];
+
 const corsOptions = {
-	origin: process.env.NODE_ENV === 'production' ? 'https://tandrei.pro' : 'http://localhost:5173',
+	origin: process.env.NODE_ENV === 'production' ? allowedProdOrigins : allowedDevOrigins,
 	credentials: true,
 	optionsSuccessStatus: 200,
 };
