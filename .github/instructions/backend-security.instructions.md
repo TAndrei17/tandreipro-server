@@ -21,6 +21,7 @@ applyTo: "src/**/*.ts, bin/**/*.ts, scripts/**/*.ts, migrations/**/*.ts, __tests
 
 - Never construct SQL or NoSQL queries by concatenating untrusted input. Use parameterized queries or a trusted ORM/ODM, and validate values before they reach the data layer.
 - Keep authorization checks on protected operations; authentication alone does not establish permission to access a resource.
+- Treat migrations and database maintenance scripts as potentially destructive. Before running commands that remove data, roll back migrations, or reset credentials, confirm the target environment/database and obtain the user's explicit approval.
 
 ## Errors and Logging
 
