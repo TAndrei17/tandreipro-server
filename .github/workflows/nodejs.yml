@@ -42,7 +42,7 @@ jobs:
           NODE_ENV: ${{ 'development' }}
           DATABASE_URL: ${{ secrets.DATABASE_URL_DEV }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          KEY_SECRET_CAPTCHA: ${{ secrets.KEY_SECRET_CAPTCHA_DEV }}
+          TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY_DEV }}
 
       - name: Publish coverage to QLTY
         uses: qltysh/qlty-action/coverage@v2

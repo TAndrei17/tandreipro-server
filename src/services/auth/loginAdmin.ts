@@ -4,11 +4,11 @@ import jwt from 'jsonwebtoken';
 
 import pool from '../../db/pool.js';
 import { LoginRequest, LoginResponse } from '../../types/authTypes.js';
-import { verifyCaptcha } from '../../utils/verifyCaptcha.js';
+import { verifyTurnstile } from '../../utils/verifyTurnstile.js';
 
 const loginAdmin = async (req: Request<{}, {}, LoginRequest>, res: Response<LoginResponse>) => {
 	try {
-		const { email, password, captchaToken } = req.body;
+		const { email, password, turnstileToken } = req.body;
 
 		if (!email || !password) {
 			return res.status(400).json({
@@ -17,20 +17,19 @@ const loginAdmin = async (req: Request<{}, {}, LoginRequest>, res: Response<Logi
 			});
 		}
 
-		if (!captchaToken) {
-			return res.status(400).json({ success: false, message: 'CAPTCHA token is missing' });
+		if (!turnstileToken) {
+			return res.status(400).json({ success: false, message: 'Turnstile token is missing' });
 		}
 
-		const secret = process.env.KEY_SECRET_CAPTCHA;
+		const secret = process.env.TURNSTILE_SECRET_KEY;
 		if (!secret) {
-			throw new Error('CAPTCHA secret key is not set in env variables');
+			throw new Error('Turnstile secret key is not set in env variables');
 		}
 
-		// CAPTCHA checking
-		const captchaData = await verifyCaptcha(captchaToken);
+		const turnstileData = await verifyTurnstile(turnstileToken);
 
-		if (!captchaData.success) {
-			return res.status(403).json({ success: false, message: 'CAPTCHA verification failed.' });
+		if (!turnstileData.success) {
+			return res.status(403).json({ success: false, message: 'Turnstile verification failed.' });
 		}
 
 		// 1. Get admin by email

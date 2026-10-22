@@ -1,7 +1,7 @@
 export interface LoginRequest {
 	email: string;
 	password: string;
-	captchaToken: string;
+	turnstileToken: string;
 }
 
 export interface LoginResponse {

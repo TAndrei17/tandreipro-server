@@ -28,7 +28,7 @@ describe('all actions /public/questions', () => {
 	it('POST/ returns 400 if data is missing', async () => {
 		const res = await request(app)
 			.post('/public/questions')
-			.send({ name: '', email: '', question: 'Some question', captchaToken: 'dummy-token' });
+			.send({ name: '', email: '', question: 'Some question', turnstileToken: 'dummy-token' });
 
 		expect(res.status).toBe(400);
 	});
@@ -38,7 +38,7 @@ describe('all actions /public/questions', () => {
 			name: 'Marty McFly',
 			email: 'backtothefuture@mail.org',
 			question: 'Are you missing me?',
-			captchaToken: 'dummy-token',
+			turnstileToken: 'dummy-token',
 		});
 
 		expect(res.status).toBe(201);
@@ -64,7 +64,7 @@ describe('all actions /public/questions', () => {
 			name: 'Marty McFly',
 			email: 'backtothefuture@mail.org',
 			question: 'Are you missing me?',
-			captchaToken: 'dummy-token',
+			turnstileToken: 'dummy-token',
 		});
 
 		expect(res.status).toBe(500);

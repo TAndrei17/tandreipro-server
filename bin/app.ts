@@ -11,7 +11,7 @@ const requiredEnv = [
 	'ADMIN_PASSWORD',
 	'DATABASE_URL',
 	'JWT_SECRET',
-	'KEY_SECRET_CAPTCHA',
+	'TURNSTILE_SECRET_KEY',
 ];
 requiredEnv.forEach((key) => {
 	if (!process.env[key]) {

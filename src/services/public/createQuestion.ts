@@ -2,14 +2,14 @@ import { Request, Response } from 'express';
 
 import pool from '../../db/pool.js';
 import { PublicQuestionRequest, PublicQuestionResponse } from '../../types/publicTypes.js';
-import { verifyCaptcha } from '../../utils/verifyCaptcha.js';
+import { verifyTurnstile } from '../../utils/verifyTurnstile.js';
 
 const createQuestion = async (
 	req: Request<{}, {}, PublicQuestionRequest>,
 	res: Response<PublicQuestionResponse>,
 ) => {
 	try {
-		const { name, email, question, captchaToken } = req.body;
+		const { name, email, question, turnstileToken } = req.body;
 
 		if (!name || !email || !question) {
 			return res.status(400).json({
@@ -31,20 +31,19 @@ const createQuestion = async (
 			return res.status(400).json({ success: false, message: 'The question is too long.' });
 		}
 
-		if (!captchaToken) {
-			return res.status(400).json({ success: false, message: 'CAPTCHA token is missing' });
+		if (!turnstileToken) {
+			return res.status(400).json({ success: false, message: 'Turnstile token is missing' });
 		}
 
-		const secret = process.env.KEY_SECRET_CAPTCHA;
+		const secret = process.env.TURNSTILE_SECRET_KEY;
 		if (!secret) {
-			throw new Error('CAPTCHA secret key is not set in env variables');
+			throw new Error('Turnstile secret key is not set in env variables');
 		}
 
-		// CAPTCHA checking
-		const captchaData = await verifyCaptcha(captchaToken);
+		const turnstileData = await verifyTurnstile(turnstileToken);
 
-		if (!captchaData.success) {
-			return res.status(403).json({ success: false, message: 'CAPTCHA verification failed.' });
+		if (!turnstileData.success) {
+			return res.status(403).json({ success: false, message: 'Turnstile verification failed.' });
 		}
 
 		const result = await pool.query(

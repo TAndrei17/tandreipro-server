@@ -61,7 +61,7 @@ describe('POST /login (integration)', () => {
 		const res = await request(app).post('/login').send({
 			email: 'nonexistent@test.com',
 			password: 'password123',
-			captchaToken: 'dummy-token',
+			turnstileToken: 'dummy-token',
 		});
 		expect(res.status).toBe(401);
 		expect(res.body.success).toBeFalsy();
@@ -71,7 +71,7 @@ describe('POST /login (integration)', () => {
 	it('returns 401 if password is incorrect', async () => {
 		const res = await request(app)
 			.post('/login')
-			.send({ email: testUser.email, password: 'wrongpassword', captchaToken: 'dummy-token' });
+			.send({ email: testUser.email, password: 'wrongpassword', turnstileToken: 'dummy-token' });
 		expect(res.status).toBe(401);
 		expect(res.body.success).toBeFalsy();
 		expect(res.body.message).toBe('Unable to log in. Please verify your email and password.');
@@ -80,7 +80,7 @@ describe('POST /login (integration)', () => {
 	it('returns 200 and sets auth_token cookie if login is successful', async () => {
 		const res = await request(app)
 			.post('/login')
-			.send({ email: testUser.email, password: testUser.password, captchaToken: 'dummy-token' });
+			.send({ email: testUser.email, password: testUser.password, turnstileToken: 'dummy-token' });
 
 		expect(res.status).toBe(200);
 		expect(res.body.success).toBeTruthy();
@@ -112,7 +112,7 @@ describe('POST /login (integration)', () => {
 
 		const res = await request(app)
 			.post('/login')
-			.send({ email: testUser.email, password: testUser.password, captchaToken: 'dummy-token' });
+			.send({ email: testUser.email, password: testUser.password, turnstileToken: 'dummy-token' });
 
 		expect(res.status).toBe(500);
 

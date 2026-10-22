@@ -57,7 +57,7 @@ describe('CREATE ANSWER TESTS /admin', () => {
 			name: 'Professor X',
 			email: 'backtothefuture2@mail.org',
 			question: 'Are you missing me? Really?',
-			captchaToken: 'dummy-token',
+			turnstileToken: 'dummy-token',
 		});
 
 		expect(resQuestion.status).toBe(201);
@@ -98,7 +98,7 @@ describe('CREATE ANSWER TESTS /admin', () => {
 			name: 'Marty McFly',
 			email: 'backtothefuture@mail.org',
 			question: 'Are you missing me?',
-			captchaToken: 'dummy-token',
+			turnstileToken: 'dummy-token',
 		});
 
 		expect(resQuestion.status).toBe(201);
@@ -123,7 +123,7 @@ describe('CREATE ANSWER TESTS /admin', () => {
 			name: 'Marty McFly',
 			email: 'backtothefuture@mail.org',
 			question: 'Are you missing me?',
-			captchaToken: 'dummy-token',
+			turnstileToken: 'dummy-token',
 		});
 
 		expect(resQuestion.status).toBe(201);
@@ -171,7 +171,7 @@ describe('CREATE ANSWER TESTS /admin', () => {
 			name: 'Marty McFly',
 			email: 'backtothefuture@mail.org',
 			question: 'Are you missing me?',
-			captchaToken: 'dummy-token',
+			turnstileToken: 'dummy-token',
 		});
 
 		expect(resQuestion.status).toBe(201);
@@ -220,7 +220,7 @@ describe('DELETE ANSWER TESTS /admin', () => {
 			name: 'Professor X',
 			email: 'backtothefuture2@mail.org',
 			question: 'Are you missing me? Really?',
-			captchaToken: 'dummy-token',
+			turnstileToken: 'dummy-token',
 		});
 		expect(resQuestion.status).toBe(201);
 		expect(resQuestion.body.data).toHaveProperty('id');
@@ -251,7 +251,7 @@ describe('DELETE ANSWER TESTS /admin', () => {
 			name: 'Marty McFly',
 			email: 'backtothefuture@mail.org',
 			question: 'Are you missing me?',
-			captchaToken: 'dummy-token',
+			turnstileToken: 'dummy-token',
 		});
 		expect(resQuestion.status).toBe(201);
 
@@ -311,7 +311,7 @@ describe('GET ALL ANSWERS /admin/answers', () => {
 			name: 'Test User',
 			email: 'testuser@mail.org',
 			question: 'Sample question?',
-			captchaToken: 'dummy-token',
+			turnstileToken: 'dummy-token',
 		});
 		expect(resQuestion.status).toBe(201);
 
@@ -383,13 +383,13 @@ describe('GET PUBLIC ANSWERS /public', () => {
 			name: 'User 1',
 			email: 'user1@mail.org',
 			question: 'Approved question?',
-			captchaToken: 'dummy-token',
+			turnstileToken: 'dummy-token',
 		});
 		const resQuestion2 = await request(app).post('/public/questions').send({
 			name: 'User 2',
 			email: 'user2@mail.org',
 			question: 'Unapproved question?',
-			captchaToken: 'dummy-token',
+			turnstileToken: 'dummy-token',
 		});
 		expect(resQuestion1.status).toBe(201);
 		expect(resQuestion2.status).toBe(201);
@@ -437,7 +437,7 @@ describe('GET PUBLIC ANSWERS /public', () => {
 			name: 'User 3',
 			email: 'user3@mail.org',
 			question: 'Another approved question?',
-			captchaToken: 'dummy-token',
+			turnstileToken: 'dummy-token',
 		});
 		expect(resQuestion.status).toBe(201);
 
