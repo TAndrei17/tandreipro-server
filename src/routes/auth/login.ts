@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import { loginRateLimiter } from '../../middlewares/rateLimiters.js';
 import { requireAuth } from '../../middlewares/requireAuth.js';
 import loginAdmin from '../../services/auth/loginAdmin.js';
 import meAdmin from '../../services/auth/meAdmin.js';
@@ -9,6 +10,7 @@ const login = Router();
 
 login.post(
 	routes.authLogin, // '/auth/login'
+	loginRateLimiter,
 	loginAdmin,
 );
 

@@ -38,7 +38,9 @@ export function requireAuth(requiredRole: 'admin' | 'user' = 'admin') {
 				return res.status(401).json({ error: 'You are not authorized. Please log in.' });
 			}
 
-			const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+			const decoded = jwt.verify(token, process.env.JWT_SECRET!, {
+				algorithms: ['HS256'],
+			}) as JwtPayload;
 
 			if (requiredRole && decoded.role !== requiredRole) {
 				return res
