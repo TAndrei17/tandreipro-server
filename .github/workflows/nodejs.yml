@@ -10,6 +10,9 @@ on:
       - main
       - dev
 
+permissions:
+  contents: read
+
 env:
   CI: true
 
@@ -27,10 +30,12 @@ jobs:
         node-version: [24.14.0]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
@@ -44,7 +49,7 @@ jobs:
       - name: Run tests
         run: npm run test-coverage
         env:
-          NODE_ENV: ${{ 'development' }}
+          NODE_ENV: development
           DATABASE_URL: ${{ secrets.DATABASE_URL_DEV }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY_DEV }}
