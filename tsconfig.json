@@ -13,9 +13,8 @@
 		"declaration": true,
 		"isolatedModules": true,
 		"allowImportingTsExtensions": false,
-		"baseUrl": "./",
 		"paths": {
-			"@/*": ["src/*"]
+			"@/*": ["./src/*"]
 		}
 	},
 	"include": ["src/**/*", "bin/**/*", "scripts/**/*", "__tests__/**/*", "src/types/**/*"],
