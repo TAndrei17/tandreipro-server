@@ -13,6 +13,11 @@ on:
 env:
   CI: true
 
+# Tests share one database, so runs must go one at a time
+concurrency:
+  group: ci-db
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
