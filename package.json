@@ -9,6 +9,7 @@
 		"ci": "npm ci",
 		"build": "tsc",
 		"create:admin": "node --loader ts-node/esm scripts/createAdmin.ts",
+		"reset:admin-password": "node --loader ts-node/esm scripts/resetAdminPassword.ts",
 		"start": "npm run build && node dist/bin/app.js",
 		"start:prod": "npm run create:admin && npm run start",
 		"dev": "npm run create:admin && node --loader ts-node/esm --no-warnings bin/app.ts",
