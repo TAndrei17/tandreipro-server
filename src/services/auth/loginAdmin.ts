@@ -4,32 +4,16 @@ import jwt from 'jsonwebtoken';
 
 import pool from '../../db/pool.js';
 import { LoginRequest, LoginResponse } from '../../types/authTypes.js';
-import { verifyTurnstile } from '../../utils/verifyTurnstile.js';
 
 const loginAdmin = async (req: Request<{}, {}, LoginRequest>, res: Response<LoginResponse>) => {
 	try {
-		const { email, password, turnstileToken } = req.body;
+		const { email, password } = req.body;
 
 		if (!email || !password) {
 			return res.status(400).json({
 				success: false,
 				message: 'Unable to log in. Please verify your email and password.',
 			});
-		}
-
-		if (!turnstileToken) {
-			return res.status(400).json({ success: false, message: 'Turnstile token is missing' });
-		}
-
-		const secret = process.env.TURNSTILE_SECRET_KEY;
-		if (!secret) {
-			throw new Error('Turnstile secret key is not set in env variables');
-		}
-
-		const turnstileData = await verifyTurnstile(turnstileToken);
-
-		if (!turnstileData.success) {
-			return res.status(403).json({ success: false, message: 'Turnstile verification failed.' });
 		}
 
 		// 1. Get admin by email

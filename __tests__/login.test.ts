@@ -1,5 +1,8 @@
 import 'dotenv/config';
-import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
+import { randomBytes } from 'node:crypto';
+
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
+import axios from 'axios';
 import bcrypt from 'bcrypt';
 import express from 'express';
 import jwt from 'jsonwebtoken';
@@ -14,6 +17,7 @@ app.use(express.json());
 app.use(login);
 
 let originalEnv: string | undefined;
+let originalTurnstileSecret: string | undefined;
 // Mock JWT secret
 process.env.JWT_SECRET = 'testsecret';
 
@@ -30,6 +34,11 @@ const testUser = {
 beforeAll(async () => {
 	originalEnv = process.env.NODE_ENV;
 	process.env.NODE_ENV = 'test';
+	originalTurnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+	process.env.TURNSTILE_SECRET_KEY = randomBytes(32).toString('hex');
+	jest.spyOn(axios, 'post').mockResolvedValue({
+		data: { success: true }, status: 200, statusText: 'OK', headers: {}, config: { url: '' },
+	});
 
 	testUser.password_hash = await bcrypt.hash(testUser.password, 10);
 
@@ -47,11 +56,14 @@ afterAll(async () => {
 	await pool.query('DELETE FROM users WHERE id = $1', [testUser.id]);
 	await pool.end();
 	process.env.NODE_ENV = originalEnv;
+	if (originalTurnstileSecret === undefined) delete process.env.TURNSTILE_SECRET_KEY;
+	else process.env.TURNSTILE_SECRET_KEY = originalTurnstileSecret;
+	jest.restoreAllMocks();
 });
 
 describe('POST /login (integration)', () => {
 	it('returns 400 if email or password is missing', async () => {
-		const res = await request(app).post('/login').send({});
+		const res = await request(app).post('/login').send({ turnstileToken: 'dummy-token' });
 		expect(res.status).toBe(400);
 		expect(res.body.success).toBeFalsy();
 		expect(res.body.message).toBe('Unable to log in. Please verify your email and password.');

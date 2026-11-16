@@ -59,6 +59,19 @@ This backend was created specifically for tandrei.pro to support:
 - administrative workflows
 - a maintainable and scalable backend architecture
 
+## Turnstile configuration
+
+Set `TURNSTILE_SECRET_KEY` on the backend to the Cloudflare Turnstile secret for the
+site key used by the frontend. The frontend build needs `VITE_TURNSTILE_SITE_KEY`
+for production (`VITE_TURNSTILE_SITE_KEY_DEV` for development). Never expose the
+secret in a frontend variable.
+
+`POST /public/questions` and `POST /auth/login` require `turnstileToken` in the
+JSON body. Each token is verified with Cloudflare and can only be used once.
+Invalid or missing tokens are rejected; a verification service failure returns
+503. Configure production credentials in the deployment environment, not in
+tracked files.
+
 ## License
 
 All rights reserved.

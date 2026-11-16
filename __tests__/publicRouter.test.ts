@@ -1,5 +1,8 @@
 import 'dotenv/config';
-import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
+import { randomBytes } from 'node:crypto';
+
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
+import axios from 'axios';
 import express from 'express';
 import request from 'supertest';
 
@@ -12,16 +15,25 @@ app.use(express.json());
 app.use(router);
 
 let originalEnv: string | undefined;
+let originalTurnstileSecret: string | undefined;
 
 beforeAll(() => {
 	originalEnv = process.env.NODE_ENV;
 	process.env.NODE_ENV = 'test';
+	originalTurnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+	process.env.TURNSTILE_SECRET_KEY = randomBytes(32).toString('hex');
+	jest.spyOn(axios, 'post').mockResolvedValue({
+		data: { success: true }, status: 200, statusText: 'OK', headers: {}, config: { url: '' },
+	});
 });
 
 afterAll(async () => {
 	await pool.query('DELETE FROM questions');
 	await pool.end();
 	process.env.NODE_ENV = originalEnv;
+	if (originalTurnstileSecret === undefined) delete process.env.TURNSTILE_SECRET_KEY;
+	else process.env.TURNSTILE_SECRET_KEY = originalTurnstileSecret;
+	jest.restoreAllMocks();
 });
 
 describe('all actions /public/questions', () => {

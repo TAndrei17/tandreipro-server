@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import { createQuestionRateLimiter } from '../../middlewares/rateLimiters.js';
+import { requireTurnstile } from '../../middlewares/requireTurnstile.js';
 import createQuestion from '../../services/public/createQuestion.js';
 import getAnswersForApprovedQuestions from '../../services/public/getAnswersForApprovedQuestions.js';
 import getApprovedQuestions from '../../services/public/getApprovedQuestions.js';
@@ -17,6 +18,7 @@ publicRouter.get(
 publicRouter.post(
 	routes.public, // '/public/questions'
 	createQuestionRateLimiter,
+	requireTurnstile,
 	createQuestion,
 );
 

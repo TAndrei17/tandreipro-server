@@ -1,5 +1,8 @@
 import 'dotenv/config';
-import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
+import { randomBytes } from 'node:crypto';
+
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
+import axios from 'axios';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import jwt from 'jsonwebtoken';
@@ -14,10 +17,16 @@ app.use(express.json());
 app.use(router);
 
 let originalEnv: string | undefined;
+let originalTurnstileSecret: string | undefined;
 
 beforeAll(async () => {
 	originalEnv = process.env.NODE_ENV;
 	process.env.NODE_ENV = 'test';
+	originalTurnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+	process.env.TURNSTILE_SECRET_KEY = randomBytes(32).toString('hex');
+	jest.spyOn(axios, 'post').mockResolvedValue({
+		data: { success: true }, status: 200, statusText: 'OK', headers: {}, config: { url: '' },
+	});
 	await pool.query('DELETE FROM questions');
 
 	// Ensure a test admin user exists with id=4 so tokens in tests are valid
@@ -34,6 +43,9 @@ afterAll(async () => {
 	await pool.query('DELETE FROM users WHERE id = $1', [4]);
 	await pool.end();
 	process.env.NODE_ENV = originalEnv;
+	if (originalTurnstileSecret === undefined) delete process.env.TURNSTILE_SECRET_KEY;
+	else process.env.TURNSTILE_SECRET_KEY = originalTurnstileSecret;
+	jest.restoreAllMocks();
 });
 
 const generateToken = (role: 'admin' | 'user' = 'admin') => {
