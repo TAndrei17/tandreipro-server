@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 
-import { afterAll, afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import axios from 'axios';
 import bcrypt from 'bcrypt';
 import express from 'express';
@@ -14,12 +14,17 @@ app.use(express.json());
 app.use(router);
 
 const originalSecret = process.env.TURNSTILE_SECRET_KEY;
+const originalEnv = process.env.NODE_ENV;
 const secret = randomBytes(32).toString('hex');
 const token = randomBytes(32).toString('hex');
 const endpoints = [
 	{ path: '/auth/login', body: { email: 'admin@example.invalid', password: 'password' } },
 	{ path: '/public/questions', body: { name: 'Test', email: 'test@example.invalid', question: 'A valid question?' } },
 ];
+
+beforeAll(() => {
+	process.env.NODE_ENV = 'test';
+});
 
 beforeEach(() => {
 	process.env.TURNSTILE_SECRET_KEY = secret;
@@ -32,6 +37,8 @@ afterEach(() => {
 afterAll(async () => {
 	if (originalSecret === undefined) delete process.env.TURNSTILE_SECRET_KEY;
 	else process.env.TURNSTILE_SECRET_KEY = originalSecret;
+	if (originalEnv === undefined) delete process.env.NODE_ENV;
+	else process.env.NODE_ENV = originalEnv;
 	await pool.end();
 });
 
